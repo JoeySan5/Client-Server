@@ -1,92 +1,186 @@
-# Homework 8
+# CSE 109 - Homework 9
 
+**Due Date: 5/2/2022 EOD**
 
+## Instructions
 
-## Getting started
+**Read thoroughly before starting your project:**
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+1. Fork this repository into your CSE109 project namespace. [Instructions](https://docs.gitlab.com/ee/workflow/forking_workflow.html#creating-a-fork)
+2. Clone your newly forked repository onto your development machine. [Instructions](https://docs.gitlab.com/ee/gitlab-basics/start-using-git.html#clone-a-repository) 
+3. As you are writing code you should commit patches along the way. *i.e.* don't just submit all your code in one big commit when you're all done. Commit your progress as you work. **You should make at least one commit per function.**
+4. When you've committed all of your work, there's nothing left to do to submit the assignment.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Assignment
 
-## Add your files
+For this assignment, you will need to combine all of the skills you learned throughout CSE 109. As this is your final project, I expect that you have acquired the necessary skills to complete it. Therefore, I will not tell you what to do step-by-step. You have a lot of latitude to complete this project as you see fit. This means you can use whichever language you want (either C or C++), you can lay out your project directory however you want, and you can use whatever tools you want (gcc, g++, clang, Make, etc.). Do whatever works for you in order to achieve the intended result.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+For this assignment, you will be writing the first half of a client/server pair that will communicate over Unix sockets. The pair is:
+
+1. File Server - A file server is a program that hosts files for clients. It receives files that clients want to store, and sends them back to the client (or other clients) when they are requested.
+2. Client - This program connects to the server and can send files to it, which will be stored on the file server. The client can also request files from the file server. This is what you will be writing for this assignment.
+
+## Part 1 - Client
+
+The client program should accept the following flags:
+
+1. `--hostname address:port` - Where `address` is a 32 bit IP address, and `port` is the desired port of the file server.
+
+2. `--send filename`
+
+Where `filename` is a path to a file on your local computer. 
+
+3. `--request filename`
+
+Where `filename` is the name of a file stored on the file server
+
+For example, you could call the client like this:
 
 ```
-cd existing_repo
-git remote add origin http://gitlab.cse.lehigh.edu/cse109/spring-2022/assignments/homework-8.git
-git branch -M main
-git push -uf origin main
+./client --hostname localhost:8081 --send files/document.txt
 ```
 
-## Integrate with your tools
+Or like this:
 
-- [ ] [Set up project integrations](http://gitlab.cse.lehigh.edu/cse109/spring-2022/assignments/homework-8/-/settings/integrations)
+```
+./client --hostname localhost:8081 --request document.txt
+```
 
-## Collaborate with your team
+If you call the program with the `--send` and `--request` options at the same time, it should exit with an error. If you call the program without a `--hostname`, it should exit with an error.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### Sending a File
 
-## Test and Deploy
+I've included six sample files in the `files` directory. They are:
 
-Use the built-in continuous integration in GitLab.
+- document.txt - a plain text document
+- index.html - an html document
+- program.c - a C source file
+- logo.svg - the Lehigh logo in SVG
+- main - a compiled C executable
+- picture.png - a picture in Portable Network Graphics (PNG) format
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+To send a file, you will have to code the following steps:
 
-***
+- The user will invoke the program with a hostname, and a path to the file to send. e.g. `./client --hostname localhost:8081 --send files/document.txt`.
+- Parse the input arguments, and store the path of the file to read, as well as the host address and port numbers.
+- Open the file and read it into memory.
+- Store the file in the following struct:
 
-# Editing this README
+```
+struct File {
+  string name,                 // The name of the file, excluding the path. e.g. just document.txt
+  vector<unsigned char> bytes, // The byte contents of the file
+}
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+*(You don't have to use this exact struct. Like I said, you have latitude in how you design this. If you are using C you won't have vector, but you can use a `char*` array instead, along with a length field.)*
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- Serialize the struct using the PACK109 message protocol. You'll have to write serialization and deserialization code to do this.
+- Encrypt the serialized vector using the simple encryption scheme laid out [here](https://codeforwin.org/2018/05/10-cool-bitwise-operator-hacks-and-tricks.html).
+- Establish a Unix socket connection with a remote server using the provided hostname and port.
+- Send the encrypted byte vector over the socket.
 
-## Name
-Choose a self-explaining name for your project.
+#### Serialized File
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+If you have a file called `file.txt` with the contents `Hello`, then the serialzied, unencrypted message should look like this:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```
+┌───────────────────────────────────────────────────────────────────────────────┐
+│0xae     // map tag                                                            │
+│0x01     // 1 kv pair                                                          │
+├───────────────────────────────────────────────────────┬───────────┬───────────┤
+│0xaa     // string8 tag                                │           │           │
+│0x04     // 4 characters                               │ key       │           │
+│File     // the string "File"                          │           │           │
+├───────────────────────────────────────────────────────┼───────────┤  pair 1   │
+│0xae     // the value associated with the key is a map │           │           │
+│0x02     // 2 kv pairs                                 │           │           │
+├────────────────────────────────┬───────────┬──────────┤           │           │
+│0xaa     // string8 tag         │           │          │           │           │
+│0x04     // 4 characters        │ key       │          │           │           │
+│name     // the string "name"   │           │          │           │           │
+├────────────────────────────────┼───────────┤ pair 1   │           │           │
+│0xaa     // string8 tag         │           │          │           │           │
+│0x08     // 8 characters        │ value     │          │           │           │
+│file.txt // the filename        │           │          │           │           │
+├────────────────────────────────┼───────────┼──────────┤           │           │
+│0xaa     // string8 tag         │           │          │ value     │           │
+│0x05     // 5 characters        │ key       │          │           │           │
+│bytes    // the string "bytes"  │           │          │           │           │
+├────────────────────────────────┼───────────┤ pair 2   │           │           │
+│0xac     // array8 tag          │ value     │          │           │           │
+│0x05     // 5 elements          │           │          │           │           │
+|0xa2     // unsigned byte tag   │           │          │           │           │
+│H        // a byte              │           │          │           │           │
+|0xa2     // unsigned byte tag   │           │          │           │           │
+│e        // a byte              │           │          │           │           │
+|0xa2     // unsigned byte tag   │           │          │           │           │
+│l        // a byte              │           │          │           │           │
+|0xa2     // unsigned byte tag   │           │          │           │           │
+│l        // a byte              │           │          │           │           │
+|0xa2     // unsigned byte tag   │           │          │           │           │
+│o        // a byte              │           │          │           │           │
+└────────────────────────────────┴───────────┴──────────┴───────────┴───────────┘           
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+In decimal:
+```
+[174, 1, 170, 4, 70, 105, 108, 101, 174, 2, 170, 4, 110, 97, 109, 101, 170, 8, 102, 105, 108, 101, 46, 116, 120, 116, 170, 5, 98, 121, 116, 101, 115, 172, 5, 162, 72, 162, 101, 162, 108, 162, 108, 162, 111]
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+### Requesting a File
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+To request a file, you will have to code the following steps:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- The user will invoke the program with a hostname, and a filename that is requested from the file server. e.g. `./client --hostname localhost:8081 --request document.txt`.
+- Parse the input arguments, and store the name of the file to request, as well as the host address and port numbers.
+- Store the requested file name in the following struct:
+```
+struct Request {
+  string name, // The name of the requested file, e.g. document.txt
+}
+```
+- Serialize the struct using the PACK109 message protocol. You'll have to write serialization and deserialization code to do this.
+- Encrypt the serialized vector using the simple encryption scheme laid out [here](https://codeforwin.org/2018/05/10-cool-bitwise-operator-hacks-and-tricks.html).
+- Establish a Unix socket connection with a remote server using the provided hostname and port.
+- Send the encrypted byte vector over the socket.
+- Wait for a response from the server. When a response is received, it will be a vector of bytes. Save this vector of bytes into your program's memory.
+- Decrypt the vector of bytes using the same simple encryption scheme as in the previous section.
+- Deserialize the message. It will be in the PACK109 format, and the response will be a `File` struct, as laid out in the previous section.
+- Once you have deserialized the message from the server, you should have access to the original bytes of the file, and its name. Save the file in a folder called `received`.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+#### Serialized Request
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+If you have a file called `file.txt` that you are requesting, then the unencrypted message should look like this:
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```
+┌───────────────────────────────────────────────────────────────────────────────┐
+│0xae     // map tag                                                            │
+│0x01     // 1 kv pair                                                          │
+├───────────────────────────────────────────────────────┬───────────┬───────────┤
+│0xaa     // string8 tag                                │           │           │
+│0x07     // 7 characters                               │ key       │           │
+│Request  // the string "Request"                       │           │           │
+├───────────────────────────────────────────────────────┼───────────┤  pair 1   │
+│0xae     // the value associated with the key is a map │           │           │
+│0x01     // 1 kv pair                                  │           │           │
+├──────────────────────────────┬───────────┬────────────┤           │           │
+│0xaa     // string8 tag       │           │            │           │           │
+│0x04     // 4 characters      │ key       │            │ value     │           │
+│name     // the string "name" │           │            │           │           │
+├──────────────────────────────┼───────────┤ pair 1     │           │           │
+│0xaa     // string8 tag       │           │            │           │           │
+│0x08     // 8 characters      │ value     │            │           │           │
+│file.txt // the filename      │           │            │           │           │
+└──────────────────────────────┴───────────┴────────────┴───────────┴───────────┘           
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+In decimal:
+```
+[174, 1, 170, 7, 82, 101, 113, 117, 101, 115, 116, 174, 1, 170, 4, 110, 97, 109, 101, 170, 8, 102, 105, 108, 101, 46, 116, 120, 116]
+```
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
 
-## License
-For open source projects, say how it is licensed.
+## Writeup
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+In a file called WRITEUP.md, provide a detailed account of how your client was constructed. First and foremost, tell me how to build it. What steps do I need to take to run it? Then, tell me how your program works. Go through the entire program and tell me what everything does. Explain your design decisions. Explain any code that is not straightforward. Note: If you would rather record a video walkthrough of your code, you can do this as well. Upload the video to your repository or google drive and add a link here (make sure to grant me viewing permissions).
