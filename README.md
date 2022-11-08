@@ -1,6 +1,8 @@
-# CSE 109 - Systems Software - Spring 2022 - Homework 8
+# CSE109 - Systems Software - Fall 2022 
 
-**Due Date: 5/2/2022 EOD**
+# Homework 8 - File Server Part I (Client)
+
+**Due Date: 11/21/2022 EOD**
 
 ## Instructions
 
@@ -13,18 +15,21 @@
 
 ## Assignment
 
-For this assignment, you will need to combine all of the skills you learned throughout CSE 109. As this is your final project, I expect that you have acquired the necessary skills to complete it. Therefore, I will not tell you what to do step-by-step. You have a lot of latitude to complete this project as you see fit. This means you can use whichever language you want (either C or C++), you can lay out your project directory however you want, and you can use whatever tools you want (gcc, g++, clang, Make, etc.). Do whatever works for you in order to achieve the intended result.
-
 For this assignment, you will be writing the first half of a client/server pair that will communicate over Unix sockets. The pair is:
 
 1. File Server - A file server is a program that hosts files for clients. It receives files that clients want to store, and sends them back to the client (or other clients) when they are requested.
 2. Client - This program connects to the server and can send files to it, which will be stored on the file server. The client can also request files from the file server. This is what you will be writing for this assignment.
 
-## Part 1 - Client
+To do this, you will need to combine all of the skills you learned throughout CSE109. As this is your final project, I expect that you have acquired the necessary skills to complete it. You must use C++ as the language for this project. You should put all of your `*.cpp` code in a directory called "src". Put all of your header files in a directory called "include". Any external libraries you use (Pack109, HashTable) should put put into a folder called "lib". You should write a Makefile that compiles your code with the `make all` command. 
+
+**IMPORTANT NOTE** If you are developing your project on MacOS, you *MUST* verify that it works on Unix using the Sun Labs. Working on your machine is not enough, it has to be buildable on other machines as well. If your code as submitted does not compile on the instructor's machines, you will receive points off for this. The target platofrm should be at least Ubuntu 20.04, with g++ v9.3.0.
+
+## File Server Part 1 - Client
 
 The client program should accept the following flags:
 
-1. `--hostname address:port` - Where `address` is a 32 bit IP address, and `port` is the desired port of the file server.
+1. `--hostname address:port` - Where `address` is a IPv4 hostname, and `port` is the desired port of the file server. If this flag isn't provided, the default address is taken to be "localhost" and the default port is taken to be "123
+"
 
 2. `--send filename`
 
@@ -37,7 +42,7 @@ Where `filename` is the name of a file stored on the file server
 For example, you could call the client like this:
 
 ```
-./client --hostname localhost:8081 --send files/document.txt
+./client --hostname localhost:1234 --send files/document.txt
 ```
 
 Or like this:
@@ -46,7 +51,7 @@ Or like this:
 ./client --hostname localhost:8081 --request document.txt
 ```
 
-If you call the program with the `--send` and `--request` options at the same time, it should exit with an error. If you call the program without a `--hostname`, it should exit with an error.
+If you call the program with the `--send` and `--request` options at the same time, it should exit with an error.
 
 ### Sending a File
 
@@ -68,8 +73,8 @@ To send a file, you will have to code the following steps:
 
 ```
 struct File {
-  string name,                 // The name of the file, excluding the path. e.g. just document.txt
-  vector<unsigned char> bytes, // The byte contents of the file
+  string name,      // The name of the file, excluding the path. e.g. just document.txt
+  vector<u8> bytes, // The byte contents of the file
 }
 ```
 
@@ -128,6 +133,12 @@ In decimal:
 [174, 1, 170, 4, 70, 105, 108, 101, 174, 2, 170, 4, 110, 97, 109, 101, 170, 8, 102, 105, 108, 101, 46, 116, 120, 116, 170, 5, 98, 121, 116, 101, 115, 172, 5, 162, 72, 162, 101, 162, 108, 162, 108, 162, 111]
 ```
 
+In hex:
+
+```
+[0xAE, 0x01, 0xAA, 0x04, 0x46, 0x69, 0x6C, 0x65, 0xAE, 0x02, 0xAA, 0x04, 0x6E, 0x61, 0x6D, 0x65, 0xAA, 0x08, 0x66, 0x69, 0x6C, 0x65, 0x2E, 0x74, 0x78, 0x74, 0xAA, 0x05, 0x62, 0x79, 0x74, 0x65, 0x73, 0xAC, 0x05, 0xA2, 0x48, 0xA2, 0x65, 0xA2, 0x6C, 0xA2, 0x6C, 0xA2, 0x6F]
+```
+
 ### Requesting a File
 
 To request a file, you will have to code the following steps:
@@ -179,8 +190,19 @@ In decimal:
 ```
 [174, 1, 170, 7, 82, 101, 113, 117, 101, 115, 116, 174, 1, 170, 4, 110, 97, 109, 101, 170, 8, 102, 105, 108, 101, 46, 116, 120, 116]
 ```
-
+In hex:
+```
+[0xAE, 0x01, 0xAA, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0xAE, 0x01, 0xAA, 0x04, 0x6E, 0x61, 0x6D, 0x65, 0xAA, 0x08, 0x66, 0x69, 0x6C, 0x65, 0x2E, 0x74, 0x78, 0x74]
+```
 
 ## Writeup
 
-In a file called WRITEUP.md, provide a detailed account of how your client was constructed. First and foremost, tell me how to build it. What steps do I need to take to run it? Then, tell me how your program works. Go through the entire program and tell me what everything does. Explain your design decisions. Explain any code that is not straightforward. Note: If you would rather record a video walkthrough of your code, you can do this as well. Upload the video to your repository or google drive and add a link here (make sure to grant me viewing permissions).
+In a file called WRITEUP.md, provide a detailed account of how your client was constructed. First and foremost, tell me how to build it. What steps do I need to take to run it? Then, tell me how your program works. 
+
+- Go through the entire program and tell me what everything does. 
+- Explain your design decisions. Why did you do things the way you did.
+- Explain any code that is not straightforward. 
+
+Note any sources that you used and make sure to include a works cited.
+
+Note: If you would rather record a video walkthrough of your code, you can do this as well. Upload the video to your repository or google drive and add a link here. Make sure to grant viewing permissions to **anyone with the link** (!!!not just Prof. Montella!!!).
