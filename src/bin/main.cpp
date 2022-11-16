@@ -36,6 +36,10 @@ printf("%d", i);
            // std::cout <<address_port;
         }
 
+    if( ((request_flag == true) && (send_flag == true)) || ((request_flag == false) && (send_flag == false)) ){
+            printf("ENDING PROGRAM");
+            return 2;
+        }
         
 
     //accept following flag:
