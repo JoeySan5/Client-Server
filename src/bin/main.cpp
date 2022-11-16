@@ -65,6 +65,19 @@ printf("%d", i);
         }
         
     }
+
+    if (host_flag == false){
+        address = "localhost";
+        port = "123";
+        std::cout <<address<< port;
+    }
+    else if(host_flag == true){
+        std::vector<std::string> v = split(address_port, ':');
+        address = v[0];
+        port = v[1];
+        std::cout <<address << "\n" << port;
+        //printf("HELLO");
+    }
     //accept following flag:
     //--hostname address:port - Where address is a IPv4 hostname, 
     //and port is the desired port of the file server. 
