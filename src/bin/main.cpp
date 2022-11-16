@@ -6,6 +6,7 @@
 #include <string.h>
 #include <vector>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -35,13 +36,21 @@ printf("%d", i);
             address_port = argv[i+1];
            // std::cout <<address_port;
         }
+        if (strcmp(argv[i], "--send") == 0) {
+            file_name = argv[i+1];
+            send_flag = true;
+        }
+        if( (strcmp(argv[i], "--request") == 0) ){
+            file_name = argv[i+1];
+            request_flag = true;
+        }
 
     if( ((request_flag == true) && (send_flag == true)) || ((request_flag == false) && (send_flag == false)) ){
             printf("ENDING PROGRAM");
             return 2;
         }
         
-
+    }
     //accept following flag:
     //--hostname address:port - Where address is a IPv4 hostname, 
     //and port is the desired port of the file server. 
