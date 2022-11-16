@@ -11,7 +11,20 @@
 using namespace std;
 
 
+std::vector<std::string> split (const std::string s, char delim) {
+    std::vector<std::string> result;
+    std::stringstream ss(s);
+    std::string item;
 
+    while (std::getline (ss, item, delim)) {
+        result.push_back (item);
+    }
+    //cout << result[0] ;
+    //printf("HELLO");
+
+    return result;
+
+    }
 
 int main(int argc, char const *argv[])
 {
@@ -23,6 +36,7 @@ int main(int argc, char const *argv[])
     std::string address_port;
     std::string address;
     std::string port;
+    std::string file_path;
     std::string file_name;
     
 
@@ -45,7 +59,7 @@ printf("%d", i);
             request_flag = true;
         }
 
-    if( ((request_flag == true) && (send_flag == true)) || ((request_flag == false) && (send_flag == false)) ){
+        if( ((request_flag == true) && (send_flag == true)) || ((request_flag == false) && (send_flag == false)) ){
             printf("ENDING PROGRAM");
             return 2;
         }
