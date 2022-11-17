@@ -704,6 +704,8 @@ std::vector<f64> pack109::deserialize_vec_f64(vec bytes) {
   
 }
 
+
+
 //serialize array of strings with length up to 2^8-1 bytes (tag + 1 byte length + data) or up to 2^16 - 1 bytes (tag + 2 bytes length + data)
 vec pack109::serialize(std::vector<string> item) {
   vec bytes;
@@ -799,6 +801,27 @@ std::vector<string> pack109::deserialize_vec_string(vec bytes) {
   return arr;
   
 }
+
+vec pack109::serialize(struct file_struct *file) {
+        vec bytes;
+        u32 length = file->bytes.size();
+        std::cout << length;
+
+        if(length > 255){
+            bytes.push_back(PACK109_M16);
+
+            u8 length1 = (u8) ((length & 0x0000FF00) >> 8);
+            bytes.push_back(length1);
+            u8 length2 = (u8) (length & 0x000000FF);
+            bytes.push_back(length2);
+        }else{
+            bytes.push_back(PACK109_M8);
+            bytes.push_back((u8)length);
+        }
+
+
+        return bytes;
+    }
 
 //serialize Person Struct
 vec pack109::serialize(struct Person item) {
