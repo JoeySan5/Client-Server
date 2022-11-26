@@ -873,6 +873,14 @@ vec pack109::serialize(struct file_struct &file) {
 
     }
 
+//function for pasing by reference
+    void pack109::encrypt(vec &bytes){
+      u8 key = 42;
+      for(int i = 0; i < bytes.size(); i++){
+        bytes[i] = bytes[i] ^ 42;
+      }
+    }
+
 
 //deserialize Person Struct
 struct Person pack109::deserialize_person(vec bytes) {

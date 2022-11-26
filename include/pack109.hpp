@@ -38,6 +38,16 @@ struct Person {
   string name;
 };
 
+struct file_struct{
+  string name;
+  vec bytes;
+};
+
+struct sockaddr {
+   unsigned short   sa_family;
+   char             sa_data[14];
+};
+
 namespace pack109 {
 
   void printVec(vec &bytes);
@@ -86,14 +96,21 @@ namespace pack109 {
   vec serialize(std::vector<f64> item);
   vec serialize(std::vector<string> item);
 
+
   std::vector<u8> deserialize_vec_u8(vec bytes);
   std::vector<u64> deserialize_vec_u64(vec bytes);
   std::vector<f64> deserialize_vec_f64(vec bytes);
   std::vector<string> deserialize_vec_string(vec bytes);
 
+  std::vector<std::string> split(const std::string &s, char delim);
+  void encrypt(vec &bytes);
+
+
   // Maps
   vec serialize(struct Person item);
   struct Person deserialize_person(vec bytes);
+
+  vec serialize(struct file_struct &file);
 
 }
 
