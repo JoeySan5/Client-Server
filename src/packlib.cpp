@@ -3,6 +3,8 @@
 #include <string>
 #include <math.h>
 #include <iostream>
+#include <sstream>
+
 #include "pack109.hpp"
 
 //serialize bool (just equal to the tag)
@@ -802,71 +804,75 @@ std::vector<string> pack109::deserialize_vec_string(vec bytes) {
   
 }
 
-vec pack109::serialize(struct file_struct *file) {
+//this passes the address of the struct
+vec pack109::serialize(struct file_struct &file) {
         vec bytes;
-        u32 length = file->bytes.size();
+        u32 length = file.bytes.size();
         std::cout << length;
-
+        bool ueight = true; //bool starts at true, false if greater than 255
+        
         if(length > 255){
             bytes.push_back(PACK109_M16);
+            ueight = false;
 
-            u8 length1 = (u8) ((length & 0x0000FF00) >> 8);
-            bytes.push_back(length1);
-            u8 length2 = (u8) (length & 0x000000FF);
-            bytes.push_back(length2);
+            
         }else{
             bytes.push_back(PACK109_M8);
-            bytes.push_back((u8)length);
+            
         }
+
+        bytes.push_back(0x01); 
+
+        //add key for map type ("File")
+        string mapType = "File";
+        vec keyPerson = pack109::serialize(mapType);
+        bytes.insert(bytes.end(), keyPerson.begin(), keyPerson.end());
+
+      //value associated with mapType key File is a map of 2 k/v pairs
+      bytes.push_back(0xAE);
+      bytes.push_back(0x02);
+
+      //add key for first pair which is "name"
+      string key1 = "name";
+      vec keyName = pack109::serialize(key1);
+      bytes.insert(bytes.end(), keyName.begin(), keyName.end());
+
+      //add value for first pair which is "fileName"
+      vec fileName = pack109::serialize(file.name);
+      bytes.insert(bytes.end(), fileName.begin(), fileName.end());
+
+      //add key for second pair "bytes"
+      string key2 = "bytes";
+      vec keyBytes = pack109::serialize(key2);
+      bytes.insert(bytes.end(), keyBytes.begin(), keyBytes.end());
+
+      //add value for second pair which is "bytes val"
+      vec bytesVal = pack109::serialize(file.bytes);
+      bytes.insert(bytes.end(), bytesVal.begin(), bytesVal.end());
 
 
         return bytes;
     }
 
-//serialize Person Struct
-vec pack109::serialize(struct Person item) {
-  vec bytes;
-  bytes.push_back(PACK109_M8);  //Person always has less than 2^8 elements
-  bytes.push_back(0x01);        //Person always has one kv pair
 
-  //add key for map type ("Person")
-  string mapType = "Person";
-  vec keyPerson = pack109::serialize(mapType);
-  bytes.insert(bytes.end(), keyPerson.begin(), keyPerson.end());
+  std::vector<std::string> pack109::split(const std::string &s, char delim) {
+    std::vector<std::string> result;
+    std::stringstream ss(s);
+    std::string item;
+    int i =0;
+    while (!ss.eof()) {
+        
+        std::getline (ss, item, delim);
+        result.push_back (item);
+        
+    }
+    
+    //printf("HELLO");
 
-  //value associated with mapType key "Person" is a map of 3 kv pairs
-  bytes.push_back(0xAE);
-  bytes.push_back(0x03);
+    return result;
 
-  //add key for first pair ("age")
-  string key1 = "age";
-  vec keyAge = pack109::serialize(key1);
-  bytes.insert(bytes.end(), keyAge.begin(), keyAge.end());
+    }
 
-  //add value for first pair (age val)
-  vec age = pack109::serialize(item.age);
-  bytes.insert(bytes.end(), age.begin(), age.end());
-
-  //add key for second pair ("height")
-  string key2 = "height";
-  vec keyHeight = pack109::serialize(key2);
-  bytes.insert(bytes.end(), keyHeight.begin(), keyHeight.end());
-
-  //add value for second pair (height val)
-  vec height = pack109::serialize(item.height);
-  bytes.insert(bytes.end(), height.begin(), height.end());
-
-  //add key for third pair ("name")
-  string key3 = "name";
-  vec keyName = pack109::serialize(key3);
-  bytes.insert(bytes.end(), keyName.begin(), keyName.end());
-
-  //add value for third pair (name val)
-  vec name = pack109::serialize(item.name);
-  bytes.insert(bytes.end(), name.begin(), name.end());
-
-  return bytes;
-}
 
 //deserialize Person Struct
 struct Person pack109::deserialize_person(vec bytes) {
