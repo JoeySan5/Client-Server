@@ -38,15 +38,53 @@ struct Person {
   string name;
 };
 
+//generic file struct
 struct file_struct{
   string name;
   vec bytes;
 };
 
+
+//THE FOLLOWING ARE UNIX SOCKET STRUCTS
+//generic socket address struct
 struct sockaddr {
-   unsigned short   sa_family;
-   char             sa_data[14];
+   unsigned short   sa_family; //represents address family, for internet apps, use AF_INET
+   char             sa_data[14]; // represents the 14 bytes of protocol specific addresses, based on the above family. for internet family, will use port number IP address represented by sockaddr_in
 };
+
+
+//second struct to reference sockets elements
+struct sockaddr_in {
+   short int            sin_family; //represents address family
+   unsigned short int   sin_port; //16-bit port number in Network Byte Order.
+   struct in_addr       sin_addr; //32-bit IP address in Network Byte Order.
+   unsigned char        sin_zero[8]; //You just set this value to NULL as this is not being used.
+};
+
+//structure is used only in the above structure as a structure field and holds 32 bit netid/hostid.
+struct in_addr {
+   unsigned long s_addr; //32-bit IP address in Network Byte Order.
+};
+
+//used to keep info related to the host
+struct hostent {
+   char *h_name; //official name of host e.g google.com
+   char **h_aliases; //holds list of name aliases
+   int h_addrtype;  //contains address family, and in internet based apps it is always AF_INET
+   int h_length;    //holds lenght of ip address, 4 for internet address
+   char **h_addr_list; //holds the list of addresses, for the internet ,the array of pointers h_addr_list[0], h_addr_list[1], and so on, are points to structure in_addr.
+	
+#define h_addr  h_addr_list[0] //allows for backward compatability
+};
+
+//used to keep info related to the service and associated ports
+struct servent {
+   char  *s_name; //This is the official name of the service. For example, HTTP, SMTP, FTP POP3, etc.
+   char  **s_aliases; //It holds the list of service aliases. Most of the time this will be set to NULL.
+   int   s_port;  //will have associated port number. For example, for HTTP, this will be 80.
+   char  *s_proto; //It is set to the protocol used. Internet services are provided using either TCP or UDP.
+};
+
 
 namespace pack109 {
 

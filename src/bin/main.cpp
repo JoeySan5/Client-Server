@@ -8,6 +8,10 @@
 #include <sstream>
 #include <fstream>
 #include <iterator>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 
 using namespace std;
 
