@@ -3,6 +3,7 @@
 #include <cstring>
 #include "pack109.hpp"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <vector>
 #include <sstream>
@@ -12,6 +13,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -119,7 +121,7 @@ int main(int argc, char const *argv[])
 
     char buffer[256]; //server reads characters from the socket connection into this buffer.
 
-    portno = stoi(port);
+    portno = stoi(port); //convert string to int
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0); //this creates a new socket. first arg is internet based app(internet domain for any 2 hosts), 
     //second arg is continous stream in which characters are read(like a pipe)
@@ -131,10 +133,53 @@ int main(int argc, char const *argv[])
       exit(1);
    }
 
-   //a buffer is a region of memory temporarily holding data while it(the data) is being moved to another place
-
-   server = gethostbyname(address); // this reutns a struct of hostent 
+     
+   if ((server = gethostbyname("127.0.0.1")) == nullptr){
+        perror("errorhostname");
+        exit(EXIT_FAILURE);
+   } // this reutns a struct of hostent, which contains info of the host, *h_addr contains the IP address
    //for future , use get addrinfo for better efficiency
+
+        printf("%s %s", server->h_name, "nuts");
+
+   //a buffer is a region of memory temporarily holding data while it(the data) is being moved to another place
+    bzero((char *) &serv_addr, sizeof(serv_addr)); //bzero causes for all serv_addr members to be zeros
+    serv_addr.sin_family = AF_INET; //declares that the address family is internet based
+    bcopy((char *)server->h_name, (char *)&serv_addr.sin_addr.s_addr, server->h_length); //bcopy(char*src,char*dest,int length) copies length bytes from src to dest. they may overlap
+    serv_addr.sin_port = htons(portno);//htons() converts 16-bit number in host byte order and returns a 16-bit number in network byte order used in TCP/IP networks
+
+    
+    //Connecting to Server
+
+     if (connect(sockfd,(struct sockaddr*)&serv_addr,sizeof(serv_addr)) < 0){ //connect() takes in file descriptor, address ofhost toconnect to(including port #), and size of address, returns 0 on success, -1 on fail
+
+       perror("ERROR connecting");
+       exit(1);
+   }
+
+     printf("Please enter the message: ");
+   bzero(buffer,256);
+   fgets(buffer,255,stdin);
+   
+   /* Send message to the server */
+   n = write(sockfd, buffer, strlen(buffer));
+   
+   if (n < 0) {
+      perror("ERROR writing to socket");
+      exit(1);
+   }
+   
+   /* Now read server response */
+   bzero(buffer,256);
+   n = read(sockfd, buffer, 255);
+   
+   if (n < 0) {
+      perror("ERROR reading from socket");
+      exit(1);
+   }
+	
+   printf("%s\n",buffer);
+
 
 
     return 0;
