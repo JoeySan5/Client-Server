@@ -108,17 +108,34 @@ int main(int argc, char const *argv[])
     pack109::encrypt(serialized);
 
 
-    pack109::printVec(serialized);
+    //BEGINNING OF SOCKET INITIALIZATION
 
-        pack109::encrypt(serialized);
+    int sockfd, portno, n; //sockfd is a socket descriptor that points to the file table that contains info on what action will take place (read,write etc)
+    //portno is the port number
+    //n is the return value for the read() and write() calls; i.e. it contains the number of characters read or written.
 
-            pack109::printVec(serialized);
+    struct sockaddr_in serv_addr; //contain the address of the server which we want to connect to
+    struct hostent *server; //defines the host computer on the internet
+
+    char buffer[256]; //server reads characters from the socket connection into this buffer.
+
+    portno = stoi(port);
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0); //this creates a new socket. first arg is internet based app(internet domain for any 2 hosts), 
+    //second arg is continous stream in which characters are read(like a pipe)
+    //third arg should be 0 and OS will choose TCP for stream socket and UCP for datagram sockets
 
 
+    if (sockfd < 0) {
+      perror("ERROR opening socket");
+      exit(1);
+   }
 
+   //a buffer is a region of memory temporarily holding data while it(the data) is being moved to another place
 
+   server = gethostbyname(address); // this reutns a struct of hostent 
+   //for future , use get addrinfo for better efficiency
 
-    
 
     return 0;
 }
