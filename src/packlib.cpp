@@ -850,7 +850,7 @@ vec pack109::serialize(struct file_struct &file) {
       vec bytesVal = pack109::serialize(file.bytes);
       bytes.insert(bytes.end(), bytesVal.begin(), bytesVal.end());
 
-     // bytes.push_back('\0');
+     bytes.push_back('\0');
 
 
         return bytes;

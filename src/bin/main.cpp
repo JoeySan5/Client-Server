@@ -79,7 +79,7 @@ int main(int argc, char const *argv[])
         struct Request reqFile = {file_name};
         cout<<reqFile.name;
         serialized = pack109::serialize(reqFile);
-        pack109::printVec(serialized);
+        //pack109::printVec(serialized);
         pack109::encrypt(serialized);
 
 
@@ -187,11 +187,15 @@ int main(int argc, char const *argv[])
 if (request_flag == true){
 vec recievedFile(5000);
  n = recv(sockfd,recievedFile.data(),4999,0);
+ if (n != -1) {
+   recievedFile.resize(n);
+ }
  if ( n < 0 ) printf( "recv failed" );
     if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
 
     pack109::encrypt(recievedFile);
     pack109::printVec(recievedFile);
+    cout << file_name;
 }
 
     
