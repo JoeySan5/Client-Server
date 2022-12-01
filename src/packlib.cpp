@@ -812,7 +812,7 @@ vec pack109::serialize(struct file_struct &file) {
         bool ueight = true; //bool starts at true, false if greater than 255
         
         if(length > 255){
-            bytes.push_back(PACK109_M16);
+            bytes.push_back(PACK109_M8);
             ueight = false;
 
             
@@ -850,7 +850,7 @@ vec pack109::serialize(struct file_struct &file) {
       vec bytesVal = pack109::serialize(file.bytes);
       bytes.insert(bytes.end(), bytesVal.begin(), bytesVal.end());
 
-     bytes.push_back('\0');
+    // bytes.push_back('\0');
 
 
         return bytes;
@@ -858,7 +858,7 @@ vec pack109::serialize(struct file_struct &file) {
 
     vec pack109::serialize(struct Request &reqFile){
       vec bytes;
-      bytes.push_back(0xae);
+      bytes.push_back(PACK109_M8);
       bytes.push_back(0x01);
 
 
@@ -911,6 +911,11 @@ vec pack109::serialize(struct file_struct &file) {
       }
     }
 
+// struct File pack109::deserialize_file(vec bytes){
+//   //struct File file;
+
+  
+// }
 
 //deserialize Person Struct
 struct Person pack109::deserialize_person(vec bytes) {
@@ -955,7 +960,7 @@ struct Person pack109::deserialize_person(vec bytes) {
 void pack109::printVec(vec &bytes) {
   printf("[ ");
   for (int i = 0; i < bytes.size(); i++) {
-    printf("%x ", bytes[i]);
+    printf("%d ", bytes[i]);
   }
   printf("]\n");
 }

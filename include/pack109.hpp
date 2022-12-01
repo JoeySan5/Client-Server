@@ -159,6 +159,8 @@ namespace pack109 {
 
   vec serialize(struct file_struct &file);
 
+  struct File deserialize_file(vec bytes);
+
 }
 
 #endif

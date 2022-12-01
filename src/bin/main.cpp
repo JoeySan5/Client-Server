@@ -114,6 +114,8 @@ int main(int argc, char const *argv[])
     return 2;
 }
 
+my_file.close();
+
     struct file_struct file = {file_name, bytes};
     
     //storing file struct as a serialized vec of bytes in "serialized"
@@ -188,7 +190,7 @@ if (request_flag == true){
 vec recievedFile(5000);
  n = recv(sockfd,recievedFile.data(),4999,0);
  if (n != -1) {
-   recievedFile.resize(n);
+   recievedFile.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
  }
  if ( n < 0 ) printf( "recv failed" );
     if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
@@ -196,6 +198,18 @@ vec recievedFile(5000);
     pack109::encrypt(recievedFile);
     pack109::printVec(recievedFile);
     cout << file_name;
+    std::string file_twrite = "received/file.txt"
+    //ifstream to read in a file
+	ifstream my_file(file_twrite, ios::out);//this line allows for .open() to be called as well//ios::out allows for output operations & ios::binary allows to open in binary mode ios::ate sets pos to the end of the file
+    if (my_file.is_open()){
+  
+  }
+
+  }
+  else {
+    cout << "Unable to open file";
+    return 2;
+}
 }
 
     
