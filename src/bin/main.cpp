@@ -32,6 +32,7 @@ int main(int argc, char const *argv[])
     std::string port;
     std::string file_path;
     std::string file_name;
+    vec serialized;
     
 
 
@@ -77,19 +78,15 @@ int main(int argc, char const *argv[])
     if(request_flag == true){
         struct Request reqFile = {file_name};
         cout<<reqFile.name;
-       vec serializedReq = pack109::serialize(reqFile);
-        pack109::printVec(serializedReq);
+        serialized = pack109::serialize(reqFile);
+        pack109::printVec(serialized);
+        pack109::encrypt(serialized);
 
 
 
-// bzero(buffer,5000);
-//  n = read(sockfd,buffer,255);
-//  if ( n < 0 ) printf( "recv failed" );
-//     if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
 
-//  printf("%s", buffer);
     }
-    
+    else if (send_flag == true){
 
      //to get name of file (w/ out path)
 	 std::vector<std::string> v = pack109::split(file_path, '/');
@@ -120,14 +117,14 @@ int main(int argc, char const *argv[])
     struct file_struct file = {file_name, bytes};
     
     //storing file struct as a serialized vec of bytes in "serialized"
-    vec serialized = pack109::serialize(file);
+     serialized = pack109::serialize(file);
 
         pack109::printVec(serialized);
 
 
     pack109::encrypt(serialized);
 
-
+}
     //BEGINNING OF SOCKET INITIALIZATION
 
     int sockfd, portno, n; //sockfd is a socket descriptor that points to the file table that contains info on what action will take place (read,write etc)
@@ -176,15 +173,26 @@ int main(int argc, char const *argv[])
        exit(1);
    }
 
-     char* serializedString = reinterpret_cast<char*>(&*serialized.begin()); // * returns reference to the beginning of the memory array, and & returns the address
-    printf("%s", serializedString);
+    //char* serializedString = reinterpret_cast<char*>(&*serialized.begin()); // * returns reference to the beginning of the memory array, and & returns the address
+    //printf("%s", serializedString);
 
-    char* buffer = new char[5000]; //server reads characters from the socket connection into this buffer.
+   // char* buffer = new char[5000]; //server reads characters from the socket connection into this buffer.
 
-printf("%s", serializedString);
- n = send(sockfd, serializedString, serialized.size(),0 );
+
+//printf("%s", serializedString);
+ n = send(sockfd, serialized.data(), serialized.size(),0 );
  if ( n < 0 ) printf( "recv failed" );
 
+
+if (request_flag == true){
+vec recievedFile(5000);
+ n = recv(sockfd,recievedFile.data(),4999,0);
+ if ( n < 0 ) printf( "recv failed" );
+    if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
+
+    pack109::encrypt(recievedFile);
+    pack109::printVec(recievedFile);
+}
 
     
 
