@@ -850,8 +850,38 @@ vec pack109::serialize(struct file_struct &file) {
       vec bytesVal = pack109::serialize(file.bytes);
       bytes.insert(bytes.end(), bytesVal.begin(), bytesVal.end());
 
+      bytes.push_back('\0');
+
 
         return bytes;
+    }
+
+    vec pack109::serialize(struct Request &reqFile){
+      vec bytes;
+      bytes.push_back(0xae);
+      bytes.push_back(0x01);
+
+
+// adding key to first map
+      string request = "Request";
+        vec requestVec = pack109::serialize(request);
+        bytes.insert(bytes.end(), requestVec.begin(), requestVec.end());
+
+        //adding value (another map)
+        bytes.push_back(0xae);
+      bytes.push_back(0x01);
+
+      //key of second map
+      string name = "name";
+        vec nameKey = pack109::serialize(name);
+        bytes.insert(bytes.end(), nameKey.begin(), nameKey.end());
+
+        //adding value to second map
+        vec nameVal = pack109::serialize(reqFile.name);
+              bytes.insert(bytes.end(), nameVal.begin(), nameVal.end());
+
+  return bytes;
+
     }
 
 
@@ -875,7 +905,7 @@ vec pack109::serialize(struct file_struct &file) {
 
 //function for pasing by reference
     void pack109::encrypt(vec &bytes){
-      u8 key = 42;
+      u8 key = 0x2a;
       for(int i = 0; i < bytes.size(); i++){
         bytes[i] = bytes[i] ^ 42;
       }

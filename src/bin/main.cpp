@@ -47,8 +47,9 @@ int main(int argc, char const *argv[])
             file_path = argv[i+1];
             send_flag = true;
         }
+
         if( (strcmp(argv[i], "--request") == 0) ){
-            file_path = argv[i+1];
+            file_name = argv[i+1];
             request_flag = true;
         }
         
@@ -72,6 +73,23 @@ int main(int argc, char const *argv[])
       //  std::cout <<address <<"\n"<< port;
         //printf("HELLO");
     }
+
+    if(request_flag == true){
+        struct Request reqFile = {file_name};
+        cout<<reqFile.name;
+       vec serializedReq = pack109::serialize(reqFile);
+        pack109::printVec(serializedReq);
+
+
+
+// bzero(buffer,5000);
+//  n = read(sockfd,buffer,255);
+//  if ( n < 0 ) printf( "recv failed" );
+//     if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
+
+//  printf("%s", buffer);
+    }
+    
 
      //to get name of file (w/ out path)
 	 std::vector<std::string> v = pack109::split(file_path, '/');
@@ -119,33 +137,34 @@ int main(int argc, char const *argv[])
     struct sockaddr_in serv_addr; //contain the address of the server which we want to connect to
     struct hostent *server; //defines the host computer on the internet
 
-    char buffer[256]; //server reads characters from the socket connection into this buffer.
 
     portno = stoi(port); //convert string to int
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0); //this creates a new socket. first arg is internet based app(internet domain for any 2 hosts), 
     //second arg is continous stream in which characters are read(like a pipe)
     //third arg should be 0 and OS will choose TCP for stream socket and UCP for datagram sockets
-
+    
 
     if (sockfd < 0) {
       perror("ERROR opening socket");
       exit(1);
    }
 
-     
-   if ((server = gethostbyname("127.0.0.1")) == nullptr){
+    char* caddress = &*address.begin(); //this returns a pointer to the beginning of the (reference) array of (string) address
+    server = gethostbyname(caddress); //returns a pointer to a struct hostent containing all info of the passed in server address
+
+   if ( server == nullptr){
         perror("errorhostname");
         exit(EXIT_FAILURE);
    } // this reutns a struct of hostent, which contains info of the host, *h_addr contains the IP address
    //for future , use get addrinfo for better efficiency
 
-        printf("%s %s", server->h_name, "nuts");
+        printf("%s ", (char*)server->h_addr);
 
    //a buffer is a region of memory temporarily holding data while it(the data) is being moved to another place
     bzero((char *) &serv_addr, sizeof(serv_addr)); //bzero causes for all serv_addr members to be zeros
     serv_addr.sin_family = AF_INET; //declares that the address family is internet based
-    bcopy((char *)server->h_name, (char *)&serv_addr.sin_addr.s_addr, server->h_length); //bcopy(char*src,char*dest,int length) copies length bytes from src to dest. they may overlap
+    bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length); //bcopy(char*src,char*dest,int length) copies length bytes from src to dest. they may overlap
     serv_addr.sin_port = htons(portno);//htons() converts 16-bit number in host byte order and returns a 16-bit number in network byte order used in TCP/IP networks
 
     
@@ -157,28 +176,40 @@ int main(int argc, char const *argv[])
        exit(1);
    }
 
-     printf("Please enter the message: ");
-   bzero(buffer,256);
-   fgets(buffer,255,stdin);
+     char* serializedString = reinterpret_cast<char*>(&*serialized.begin()); // * returns reference to the beginning of the memory array, and & returns the address
+    printf("%s", serializedString);
+
+    char* buffer = new char[5000]; //server reads characters from the socket connection into this buffer.
+
+printf("%s", serializedString);
+ n = send(sockfd, serializedString, serialized.size(),0 );
+ if ( n < 0 ) printf( "recv failed" );
+
+
+    
+
+//      printf("Please enter the message: ");
+//    bzero(buffer,256);
+//    fgets(buffer,255,stdin);
    
-   /* Send message to the server */
-   n = write(sockfd, buffer, strlen(buffer));
+//    /* Send message to the server */
+//    n = write(sockfd, buffer, strlen(buffer));
    
-   if (n < 0) {
-      perror("ERROR writing to socket");
-      exit(1);
-   }
+//    if (n < 0) {
+//       perror("ERROR writing to socket");
+//       exit(1);
+//    }
    
-   /* Now read server response */
-   bzero(buffer,256);
-   n = read(sockfd, buffer, 255);
+//    /* Now read server response */
+//    bzero(buffer,256);
+//    n = read(sockfd, buffer, 255);
    
-   if (n < 0) {
-      perror("ERROR reading from socket");
-      exit(1);
-   }
+//    if (n < 0) {
+//       perror("ERROR reading from socket");
+//       exit(1);
+//    }
 	
-   printf("%s\n",buffer);
+//    printf("%s\n",buffer);
 
 
 

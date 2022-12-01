@@ -44,6 +44,11 @@ struct file_struct{
   vec bytes;
 };
 
+struct Request {
+  string name; // The name of the requested file, e.g. document.txt
+};
+
+
 
 // //THE FOLLOWING ARE UNIX SOCKET STRUCTS
 // //generic socket address struct
@@ -149,6 +154,8 @@ namespace pack109 {
   // Maps
   vec serialize(struct Person item);
   struct Person deserialize_person(vec bytes);
+
+  vec serialize (struct Request &reqFile);
 
   vec serialize(struct file_struct &file);
 
