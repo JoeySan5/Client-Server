@@ -198,14 +198,14 @@ vec recievedFile(5000);
     pack109::encrypt(recievedFile);
     pack109::printVec(recievedFile);
     cout << file_name;
-    std::string file_twrite = "received/file.txt"
+    std::string file_twrite = "received/file.txt";
     //ifstream to read in a file
-	ifstream my_file(file_twrite, ios::out);//this line allows for .open() to be called as well//ios::out allows for output operations & ios::binary allows to open in binary mode ios::ate sets pos to the end of the file
-    if (my_file.is_open()){
+	ifstream my_filetwrite(file_twrite, ios::out);//this line allows for .open() to be called as well//ios::out allows for output operations & ios::binary allows to open in binary mode ios::ate sets pos to the end of the file
+    if (my_filetwrite.is_open()){
   
   }
 
-  }
+  
   else {
     cout << "Unable to open file";
     return 2;
