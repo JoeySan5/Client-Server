@@ -26,7 +26,6 @@ int main(int argc, char const *argv[])
     bool host_flag = false;
     bool send_flag = false;
     bool request_flag = false;
-    pack109::serialize(13);
     std::string address_port;
     std::string address;
     std::string port;
@@ -38,7 +37,7 @@ int main(int argc, char const *argv[])
 
 
     for (int i = 1; i < argc; i++) {
-
+ 
         if (strcmp(argv[i], "--hostname") == 0) {
             // Set the flag here, we'll use it later
             host_flag = true;
@@ -101,6 +100,7 @@ int main(int argc, char const *argv[])
 	//ifstream to read in a file
 	ifstream my_file(file_path, ios::in|ios::binary);//this line allows for .open() to be called as well//ios::in allows for input operations & ios::binary allows to open in binary mode ios::ate sets pos to the end of the file
 	if (my_file.is_open()){
+        //https://www.appsloveworld.com/cplus/100/102/istream-iterator-to-iterate-through-bytes-in-a-binary-file
   bytes.insert(bytes.end(),std::istreambuf_iterator<char>(my_file),std::istreambuf_iterator<char>()); //concats to the end of bytes, from beg of my_file to the end 
   //must use istreambuf_iterator when working with binary
         
@@ -122,7 +122,7 @@ my_file.close();
     //storing file struct as a serialized vec of bytes in "serialized"
      serialized = pack109::serialize(file);
 
-        pack109::printVec(serialized);
+       // pack109::printVec(serialized);
 
 
     pack109::encrypt(serialized);
@@ -176,10 +176,7 @@ my_file.close();
        exit(1);
    }
 
-    //char* serializedString = reinterpret_cast<char*>(&*serialized.begin()); // * returns reference to the beginning of the memory array, and & returns the address
-    //printf("%s", serializedString);
 
-   // char* buffer = new char[5000]; //server reads characters from the socket connection into this buffer.
 
 
 //printf("%s", serializedString);
@@ -201,35 +198,7 @@ vec recievedFile(5000);
     
    // struct file_struct reqFile;
     deserFile =pack109::deserialize_file(recievedFile);
-
-    
-
-    std::string file_twrite = "received/file.txt";
-    //ifstream to read in a file
-
-	fstream my_filetwrite(file_twrite, ios::out);
-    //this line allows for .open() to be called as well//ios::out allows for output operations & ios::binary allows to open in binary mode ios::ate sets pos to the end of the file
-     cout << "hello";
-
-    if (my_filetwrite.is_open()){
-        cout << "inside is open";
-
-        for(int i=0; i<recievedFile.size(); i++){
-            printf("%d", recievedFile[i]);
-        my_filetwrite<<recievedFile[i];
-    }
- 
-    
-  
-  }
-  else {
-    cout << "Unable to open file";
-    return 2;
-}
-
-my_filetwrite.close();
-
- }
+	
 
 //at this point, we have a full file struct and create a file from it 
                 string receieved = "received/"; 
@@ -244,32 +213,14 @@ my_filetwrite.close();
 
                 //close the file 
                 fileCreated.close(); 
+}
     
 
-//      printf("Please enter the message: ");
-//    bzero(buffer,256);
-//    fgets(buffer,255,stdin);
-   
-//    /* Send message to the server */
-//    n = write(sockfd, buffer, strlen(buffer));
-   
-//    if (n < 0) {
-//       perror("ERROR writing to socket");
-//       exit(1);
-//    }
-   
-//    /* Now read server response */
-//    bzero(buffer,256);
-//    n = read(sockfd, buffer, 255);
-   
-//    if (n < 0) {
-//       perror("ERROR reading from socket");
-//       exit(1);
-//    }
-	
-//    printf("%s\n",buffer);
+
 
 
 
     return 0;
+
 }
+

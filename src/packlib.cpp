@@ -985,96 +985,20 @@ struct file_struct pack109::deserialize_file(vec bytes){
  contentsVec.push_back(bytes[i]);
  vec contents = deserialize_vec_u8(contentsVec); 
  container = {filename, contents};
- } else if (bytes[contentsIndex] == PACK109_A16) { 
+ } 
+ else if (bytes[contentsIndex] == PACK109_A16) { 
  vec contentsVec;
  for (long int i = contentsIndex + 4; i < bytes.size(); i = i + 2)
  contentsVec.push_back(bytes[i]);
  container = {filename, contentsVec};
  }
  return container;
- } else
+ }
+  else
  throw;
 }
-// struct file_struct pack109::deserialize_file(vec bytes){
-//   struct file_struct deserialized_file;
-  
-//   vec name_slice = slice(bytes, 2, 7);
-//   string name_string = deserialize_string(name_slice);
-//   std::cout <<name_string << "IN NAME STRING \n";
-
-//    if (name_string != "File") {
-//      throw;
-//    }
-//    u8 name_len = bytes[39]; // Assumes name fewer than 256 chars. Safe assumption I think
-//    vec namev = slice(bytes, 16, 38 + name_len + 1);
-//    string name = deserialize_string(namev);
-//  std::cout<<name;
-//  std::vector<u8> tempVec2;
 
 
-
-
-
-//   return deserialized_file;
-// }
-
-
-  // struct file_struct pack109::deserialize_file(vec bytes){
-  //   struct file_struct f;
-                
-  //             if (bytes[0] == PACK109_M8){
-  //               int i=0; //use this as a counter to keep track of where we are in the vector
-  //               i++; //skip the map tag
-  //               i++; //skip the 1kv pair
-  //               i++; //skip the string tag 
-  //               i++; //skip the 0x04
-  //               i += 4; //skip the 4 characters in the string "file" 
-  //               i++; //skip the 0xae 
-  //               i++; //skip the 2 kv pair 
-  //               i++; //skip the string tag 
-  //               i++; //skip the 4 
-  //               i += 4; //skip the 4 characters in the string "name"
-
-  //               //check for the file name , deserialize string takes in a vec bytes 
-  //               int starting_index = i; //keep track of where we are
-  //               int characterAmount = bytes[i+1]; //skip the string tag  
-  //             //  printf("starting index %d\n", starting_index); 
-  //               //printf("character amount %d\n", characterAmount); 
-
-  //                std::vector<u8> tempVec;////////////////////////////////
-  //                for(int i=starting_index; i<starting_index+characterAmount+2; i++){
-  //                 tempVec.push_back(bytes[i]); 
-  //                }
-
-
-              
-  //                f.name = pack109::deserialize_string(tempVec); 
-  //                //skip the bytes we just deserialized 
-  //                i += characterAmount+2;
-
-  //                i++; //skip the string8 tag 
-  //                i++; //skip the 0x05 
-  //                i += 5; //skip the 5 bytes in the string "bytes"
-
-  //                starting_index = i; 
-  //                characterAmount = bytes[i+1];
-  //              //  printf("character amount ! ! ! ! ! %d\n", characterAmount);  
-  //                int iter = characterAmount*2; 
-
-  //                std::vector<u8> tempVec2; ///////////////////////////
-  //                 for(int i=starting_index; i<starting_index+iter+2; i++){
-  //                 tempVec2.push_back(bytes[i]); 
-  //               //  printf("%x ", decryptedvector[i]); 
-  //                }
-
-
-  //                f.bytes = pack109::deserialize_vec_u8(tempVec2);
-  //             }
-
-  //                return f;
- 
-
-  // }
 
 //deserialize Person Struct
 struct Person pack109::deserialize_person(vec bytes) {
