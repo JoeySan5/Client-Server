@@ -218,7 +218,11 @@ In decimal:
 
 ## Video Explanation
 
-This is the oral portion of the exam. You will record an explanation for your file server, and demonstrate that it works with the client that you wrote. To demonstrate it working, it's sufficient to show the client sending a file (any file) to the server, the server acknowledging its receipt, and then to show the client requesting it again and saving it to disk. If you did not successfully write the client, you may demonstrate your file server working with the example client binary.
+This is the oral portion of the exam. You will record an explanation for your file server, and demonstrate that it works with the client that you wrote. 
+
+**Important The first thing you say in your exam should be which cut you attempted.**
+
+To demonstrate your file server working, it's sufficient to show the client sending a file (any file) to the server, the server acknowledging its receipt, and then to show the client requesting it again and saving it to disk. If you did not successfully write the client, you may demonstrate your file server working with the example client binary.
 
 If you didn't get either the file server or client working, explain how you attempted to solve this exam and where you got stuck. Show off any code you did write. This will get you full credit for this portion.
 
