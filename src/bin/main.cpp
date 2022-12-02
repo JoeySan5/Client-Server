@@ -197,20 +197,39 @@ vec recievedFile(5000);
 
     pack109::encrypt(recievedFile);
     pack109::printVec(recievedFile);
-    cout << file_name;
+    
+   // struct file_struct reqFile;
+    struct file_struct deserFile =pack109::deserialize_file(recievedFile);
+
+    
+
     std::string file_twrite = "received/file.txt";
     //ifstream to read in a file
-	ifstream my_filetwrite(file_twrite, ios::out);//this line allows for .open() to be called as well//ios::out allows for output operations & ios::binary allows to open in binary mode ios::ate sets pos to the end of the file
+
+	fstream my_filetwrite(file_twrite, ios::out);
+    //this line allows for .open() to be called as well//ios::out allows for output operations & ios::binary allows to open in binary mode ios::ate sets pos to the end of the file
+     cout << "hello";
+
     if (my_filetwrite.is_open()){
+        cout << "inside is open";
+
+        for(int i=0; i<recievedFile.size(); i++){
+            printf("%d", recievedFile[i]);
+        my_filetwrite<<recievedFile[i];
+    }
+ 
+    
   
   }
-
-  
   else {
     cout << "Unable to open file";
     return 2;
 }
-}
+
+my_filetwrite.close();
+
+ }
+
 
     
 
