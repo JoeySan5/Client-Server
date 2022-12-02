@@ -1,6 +1,8 @@
-# CSE 109 - Systems Software - Final Exam
+# CSE109 - Systems Software - Fall 2022
 
-**Due Date: 5/13/2022 EOD**
+# Final Exam
+
+**Due Date: 12/12/2022 EOD**
 
 ## Ethics Contract
 
