@@ -33,6 +33,7 @@ int main(int argc, char const *argv[])
     std::string file_path;
     std::string file_name;
     vec serialized;
+    struct file_struct deserFile;
     
 
 
@@ -199,7 +200,7 @@ vec recievedFile(5000);
     pack109::printVec(recievedFile);
     
    // struct file_struct reqFile;
-    struct file_struct deserFile =pack109::deserialize_file(recievedFile);
+    deserFile =pack109::deserialize_file(recievedFile);
 
     
 
@@ -230,7 +231,19 @@ my_filetwrite.close();
 
  }
 
+//at this point, we have a full file struct and create a file from it 
+                string receieved = "received/"; 
+                string newFileName = deserFile.name; 
+                string fullName = receieved+newFileName; 
+                std::ofstream fileCreated(fullName); //use this to create / write to a file
+                string oneByte = ""; 
+                for(int i=0; i<deserFile.bytes.size(); i++){
+                  oneByte = deserFile.bytes[i]; //extract one byte 
+                  fileCreated << oneByte; //write to the file one byte at a time
+                }
 
+                //close the file 
+                fileCreated.close(); 
     
 
 //      printf("Please enter the message: ");
