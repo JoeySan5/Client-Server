@@ -62,7 +62,8 @@ No matter which version you choose, the file server program should accept the fo
 
 1. `--hostname address:port` - Where `address` is a 32 bit IP address, and `port` is the desired port of the file server.
 
-If you call the program without a `--hostname`, it should exit with an error.
+If you call the program without a `--hostname`, it should use the default of `localhost:8081`.
+
 
 ---
 
