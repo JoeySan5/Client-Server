@@ -1,24 +1,27 @@
+#include <utility>
+
+
 namespace linkedlist{
 
 
-template <class T>
+template <class K, class V>
 class Node {
   public:
-    T item;
+    std::pair<K,V> pair;
     size_t length;
-    linkedlist::Node<T>* next;
+    linkedlist::Node<K,V>* next;
     Node();
-    Node(T item);
+    Node(K key, V value);
     ~Node();
 };
 
-    template <class T>
+    template <class K, class V>
     Node<T>::Node()
     {
         this->item;
         this->next = NULL;
     }
-    template <class T>
+    template <class K, class V>
     Node<T>::Node(T item)
     {
         this->item = item;
