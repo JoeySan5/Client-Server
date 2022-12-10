@@ -70,28 +70,15 @@ int main(int argc, char const *argv[])
 			close(sockfd);
 
 			while(1){
-				
-                int n;
-				n = recv(newSocket, buffer.data(), 4999, 0);//receive message from client
-                 if (n != -1) {
-                    recievedFile.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
-                    }
-                if ( n < 0 ) printf( "recv failed" );
-                if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
 
-
-				if(strcmp(buffer.data(), ":quit") == 0){//if client sends :quit
-					printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
-					break;
-				}else{
-                    vec newVec(5000);
-                    memcpy(newVec.data(), buffer, 4999);
-					encrypt(newVec);
-                    memcpy(buffer.data(), newVec.data(), 4999);
-                    printVec(buffer);
-					send(newSocket, buffer.data(), buffer.size(), 0);//send message back to client
-					bzero(buffer.data(), buffer.size());
-				}
+				int n;
+		 		n = recv(newSocket, buffer.data(), 4999, 0);//receive message from client
+                  if (n != -1) {
+                     recievedFile.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
+                     }
+                 if ( n < 0 ) printf( "recv failed" );
+                 if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
+               
 			}
 		}
 
@@ -102,6 +89,20 @@ int main(int argc, char const *argv[])
 
 
         
+
+
+		// 		if(strcmp(buffer.data(), ":quit") == 0){//if client sends :quit
+		// 			printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+		// 			break;
+		// 		}else{
+        //             vec newVec(5000);
+        //             memcpy(newVec.data(), buffer, 4999);
+		// 			encrypt(newVec);
+        //             memcpy(buffer.data(), newVec.data(), 4999);
+        //             printVec(buffer);
+		// 			send(newSocket, buffer.data(), buffer.size(), 0);//send message back to client
+		// 			bzero(buffer.data(), buffer.size());
+		// 		}
     return 0;
 }
 
