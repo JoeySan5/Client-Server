@@ -47,8 +47,47 @@ class HashSet {
     // Print Table. You can do this in a way that helps you implement your hash set.
     void print();
 
+    //ADDITIONAL METHODS FOR THE FINAL
+
+    //inserts the k/v pair into the hash map. Returns true if the key already existed,
+    //and replaces the stored value with the supplied value. Returns false if the key did not exist already.
+    bool insert(String key, File value);
 };
 
+template <class T>
+bool HashSet<T>::insert(T item)
+{
+  if(this->contains(item)==true)
+  {
+    return false;
+  }
+  unsigned long hashed = hash(item);
+  this->array[hashed]->insertAtTail(item);
+  int buckets = 0;
+  for(int i =0;i<this->size;i++)
+  {
+    if(this->array[i]->length>0)
+    {
+      buckets++;
+    }
+  }
+  double loadfactor = (double)(buckets)/(double)(this->size);
+  if(loadfactor>=0.70)
+  {
+    this->resize(this->size*2);
+  }
+  return true;
+}
+
+template<class T>
+bool HashSet<T>::insert(String key,File value){
+    
+    if(this-> contains(key) == true){
+
+    }
+
+    
+}
 
 template <class T>
 unsigned long HashSet<T>::prehash(T item) 
@@ -105,30 +144,7 @@ unsigned long HashSet<T>::hash(T item)
   return s;
 }
 
-template <class T>
-bool HashSet<T>::insert(T item)
-{
-  if(this->contains(item)==true)
-  {
-    return false;
-  }
-  unsigned long hashed = hash(item);
-  this->array[hashed]->insertAtTail(item);
-  int buckets = 0;
-  for(int i =0;i<this->size;i++)
-  {
-    if(this->array[i]->length>0)
-    {
-      buckets++;
-    }
-  }
-  double loadfactor = (double)(buckets)/(double)(this->size);
-  if(loadfactor>=0.70)
-  {
-    this->resize(this->size*2);
-  }
-  return true;
-}
+
 
 template <class T>
 bool HashSet<T>::remove(T item)
