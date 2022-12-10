@@ -57,6 +57,8 @@ int main(int argc, char const *argv[])
          exit(EXIT_FAILURE);
     }
 
+    HashSet<file_struct> hs; //hashset for files 
+
 	while(1){
 		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);//accept connection
 		if(newSocket < 0){

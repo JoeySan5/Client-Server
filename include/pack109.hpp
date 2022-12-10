@@ -32,6 +32,8 @@ typedef std::string string;
 #define PACK109_M8    0xae
 #define PACK109_M16   0xaf
 
+
+
 struct Person {
   u8 age;
   f32 height;
@@ -93,8 +95,8 @@ struct Request {
 // };
 
 
-namespace pack109 {
 
+namespace pack109 {
   void printVec(vec &bytes);
 
   // Boolean
