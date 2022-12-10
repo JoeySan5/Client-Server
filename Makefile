@@ -1,12 +1,12 @@
 server: main.o libpack109.a liblinkedlist.a libhashset.a
-	g++ build/objects/main.o -o client -lpack109 -Lbuild/lib/release -lhashset -Lhashlib/build/lib/release -llinkedlist -L linkedlib/build/lib/release -std=c++11
+	g++ build/objects/main.o -o server -lpack109 -Lbuild/lib/release -lhashset -Lhashlib/build/lib/release -llinkedlist -L linkedlib/build/lib/release -std=c++11
 	mkdir -p build/bin
-	mv client build/bin
+	mv server build/bin
 
-test: libpack109.a main.o
-	g++ build/objects/main.o -o client -lpack109 -Lbuild/lib/release -std=c++11
-	mkdir -p build/bin
-	mv client build/bin
+test: main.o
+	g++ build/objects/main.o -o server -lpack109 -Lbuild/lib/release -lhashset -Lhashlib/build/lib/release -llinkedlist -L linkedlib/build/lib/release -std=c++11
+	mkdir -p build/bin	
+	mv server build/bin
 
 
 libpack109.a:
