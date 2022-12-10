@@ -16,6 +16,8 @@
 #include <cstdlib> 
 #include <thread>
 
+using namespace pack109;
+using namespace std;
 
 int main(int argc, char const *argv[])
 {
@@ -25,7 +27,7 @@ int main(int argc, char const *argv[])
 	int newSocket;//new socket file descriptor
 	struct sockaddr_in newAddr;//client address
 	socklen_t addr_size;//size of client address
-	vec message(5000);//buffer to hold btyes of messages
+	vec buffer(5000);//buffer to hold btyes of messages
 	pid_t childpid;// child process id
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);//create adult socket
@@ -34,12 +36,37 @@ int main(int argc, char const *argv[])
     exit(EXIT_FAILURE);
     }
     
-    memset(&serverAddr, '\0', sizeof(serverAddr));
+    bzero((char*)&serverAddr,  sizeof(serverAddr));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(8081);
 	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
         
-        
+    ret = bind(sockfd, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+	if(ret < 0){//bind socket to address
+    printf("Error connecting to the socket");
+    exit(EXIT_FAILURE);
+    }
+    
+    
+
+    if(listen(sockfd, 10)== 0){
+		printf("Listening for connections on port 8081\n");
+	}
+    else{//listen for connections
+         printf("Error listening for connections");
+         exit(EXIT_FAILURE);
+    }
+
+	while(1){
+		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);//accept connection
+		if(newSocket < 0){
+			exit(EXIT_FAILURE);
+		}
+		printf("Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+    printf("Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+
+    }
+
         
     return 0;
 }
