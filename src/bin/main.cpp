@@ -62,6 +62,7 @@ int main(int argc, char const *argv[])
 	while(1){
 		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);//accept connection
 		if(newSocket < 0){
+			printf("%s", "connectino not accpeted ");
 			exit(EXIT_FAILURE);
 		}
 		printf("Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
@@ -74,10 +75,15 @@ int main(int argc, char const *argv[])
 				int n;
 		 		n = recv(newSocket, buffer.data(), 4999, 0);//receive message from client
                   if (n != -1) {
-                     recievedFile.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
+                     buffer.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
                      }
                  if ( n < 0 ) printf( "recv failed" );
-                 if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
+                 if ( n == 0 ) printf("%s", "All good"); /* got end-of-stream */
+
+				 encrypt(buffer);
+				 printVec(buffer);
+
+				 break;
                
 			}
 		}
