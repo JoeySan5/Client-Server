@@ -1,4 +1,7 @@
 namespace linkedlist{
+
+
+    struct 
 template <class T>
 class Node {
   public:
