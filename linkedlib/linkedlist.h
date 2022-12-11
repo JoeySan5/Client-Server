@@ -75,7 +75,7 @@ class LinkedList {
         Node<T>* current = this->head;
         for(int i=0;i<this->length;i++)
         {
-            if(current->item==item)
+            if(current->item ==item)
             {
                 return true;
             }
@@ -134,7 +134,7 @@ class LinkedList {
         if(this->tail == NULL) 
         {	
             // List is Empty	
-            return 0;
+            return item;
         }
         else 
         {
@@ -163,7 +163,7 @@ class LinkedList {
         if(this->head == NULL) 
         {	
             // List is Empty	
-            return 0;
+            return item;
         } 
         else 
         {
@@ -180,7 +180,7 @@ class LinkedList {
     T LinkedList<T>::remove(T item)
     {
         int index = -1;
-        T temp = 0;
+        T temp;
         Node<T>* current = this->head;
         for(int i=0;i<this->length;i++)
         {
@@ -202,9 +202,10 @@ class LinkedList {
     template <class T>
     T LinkedList<T>::removeAtIndex(size_t index)
     {
+        T item;
         if (index < 0 || index >= this->length)
         {
-            return 0;
+            return item;
         }
         if (index == 0)
         {
@@ -227,7 +228,7 @@ class LinkedList {
                 return returnVal;
             }
         }
-        return 0;
+        return item;
     }
 
 

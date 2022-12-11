@@ -36,3 +36,5 @@ clean:
 	rm -rf build/lib
 	rm -rf build/objects
 	rm -rf build/out
+	rm -rf hashlib/build
+	rm -rf linkedlib/build

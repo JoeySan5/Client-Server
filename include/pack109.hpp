@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <cstdlib>
 
 #ifndef PACK109_HPP
 #define PACK109_HPP
@@ -44,6 +45,28 @@ struct Person {
 struct file_struct{
   string name;
   vec bytes;
+  bool operator==(const file_struct& other) const {
+    return this->name == other.name;
+  }
+  //  bool operator==(nullptr_t) const {
+  //    return false;
+  //  }
+
+  bool operator==(long int value) const {
+        // return true if the value of the file_struct is equal to the given value
+        // and false otherwise
+        if (value == 0){
+          return true;
+        }
+        else{
+          return false;
+        }
+    }
+
+  bool operator<(const file_struct& other) const {
+    
+    return this->name < other.name;
+  }
 };
 
 struct Request {

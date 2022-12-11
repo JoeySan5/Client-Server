@@ -59,7 +59,12 @@ int main(int argc, char const *argv[])
 
     HashSet<file_struct> hs; //hashset for files 
 
-	while(1){
+	struct file_struct deserFile;
+	
+
+	
+
+	//while(1){
 		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);//accept connection
 		if(newSocket < 0){
 			printf("%s", "connectino not accpeted ");
@@ -70,7 +75,7 @@ int main(int argc, char const *argv[])
         if((childpid = fork()) == 0){
 			close(sockfd);
 
-			while(1){
+			//while(1){
 
 				int n;
 		 		n = recv(newSocket, buffer.data(), 4999, 0);//receive message from client
@@ -83,13 +88,35 @@ int main(int argc, char const *argv[])
 				 encrypt(buffer);
 				 printVec(buffer);
 
-				 break;
+				 send(newSocket, buffer.data(), buffer.size(), 0);
+
+				//  deserFile =pack109::deserialize_file(buffer);
+				//  printVec(deserFile.bytes);
+				
+				// //at this point, we have a full file struct and create a file from it 
+                // string receieved = "received/"; 
+                // string newFileName = deserFile.name; 
+				// cout<<deserFile.name << "\n";
+                // string fullName = receieved+newFileName; 
+                // std::ofstream fileCreated(fullName); //use this to create / write to a file
+                // string oneByte = ""; 
+                // for(int i=0; i<deserFile.bytes.size(); i++){
+				// 	cout<<deserFile.bytes[i]<<"\n";
+                //   oneByte = deserFile.bytes[i]; //extract one byte 
+                //   fileCreated << oneByte; //write to the file one byte at a time
+                // }
+
+
+
+                //close the file 
+               // fileCreated.close(); 
+
+
                
-			}
+			//}
 		}
 
-
-    }
+   // }
 
     close(newSocket);
 

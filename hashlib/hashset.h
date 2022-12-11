@@ -1,5 +1,8 @@
 #include "../linkedlib/linkedlist.h"
 #include <functional>
+#include "../include/pack109.hpp"
+
+using namespace pack109;
 
 template <class T>
 class HashSet {
@@ -51,7 +54,7 @@ class HashSet {
 
     //inserts the k/v pair into the hash map. Returns true if the key already existed,
     //and replaces the stored value with the supplied value. Returns false if the key did not exist already.
-    bool insert(String key, File value);
+    bool insert(string key, vec value);
 };
 
 template <class T>
@@ -79,15 +82,19 @@ bool HashSet<T>::insert(T item)
   return true;
 }
 
-template<class T>
-bool HashSet<T>::insert(String key,File value){
-    
-    if(this-> contains(key) == true){
+// template<class T>
+// bool HashSet<T>::insert(string key,vec value){
+//     struct file_struct newFile = {key,value};
+//     if(this-> contains(newFile) == true){
+//       return false;
+//     }
 
-    }
+//     unsigned long hashed = hash(key);
+//     this->array[hashed]->insertAtTail(newFile);
 
-    
-}
+
+//     return true;
+// }
 
 template <class T>
 unsigned long HashSet<T>::prehash(T item) 
@@ -155,7 +162,7 @@ bool HashSet<T>::remove(T item)
   }
   unsigned long hashed = hash(item);
   T s = this->array[hashed]->remove(item);
-  if(s==0)
+  if(s ==0)
   {
     return false;
   }
