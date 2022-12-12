@@ -15,6 +15,7 @@
 #include <netinet/in.h>
 #include <cstdlib> 
 #include <thread>
+#include <sstream>
 
 using namespace pack109;
 using namespace std;
@@ -28,7 +29,11 @@ int main(int argc, char const *argv[])
 	struct sockaddr_in newAddr;//client address
 	socklen_t addr_size;//size of client address
 	vec buffer(5000);//buffer to hold btyes of messages
+	vec readBuffer(5000);//buffer to 
 	pid_t childpid;// child process id
+
+	int fd[2];
+
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);//create adult socket
 	if(sockfd < 0){
@@ -71,6 +76,7 @@ int main(int argc, char const *argv[])
 	struct file_struct deserFile = {"hello", newVec};
 	struct file_struct deserFile1 = {"hello", newVec};
 	struct file_struct deserFile2 = {"goodbye", oldVec};
+	struct file_struct deserFileGlobal;
 
 
 	hs.insert(deserFile);
@@ -81,19 +87,41 @@ int main(int argc, char const *argv[])
 
 
 	hs.print();
+
+		// int pipe(int fds[2]);
+
+		// Parameters :
+		// fd[0] will be the fd(file descriptor) for the 
+		// read end of pipe.
+		// fd[1] will be the fd for the write end of pipe.
+		// Returns : 0 on Success.
+		// -1 on error.
 	
+
+  int pipe_result;
+  pipe_result =pipe(fd);
+  //https://www.geeksforgeeks.org/c-program-demonstrate-fork-and-pipe/
+  //https://www.geeksforgeeks.org/pipe-system-call/
+
+  if (pipe_result<0)
+    printf("error");
 
 	
 
-	//while(1){
+	while(1){
+		hs.print();
 		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);//accept connection
 		if(newSocket < 0){
 			printf("%s", "connectino not accpeted ");
 			exit(EXIT_FAILURE);
 		}
 		printf("Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
-
-        if((childpid = fork()) == 0){
+		childpid = fork();
+		if(childpid<0) {
+    		printf("Couldn't create child process");
+    		return -1;
+  		}		
+        else if(childpid == 0){
 			close(sockfd);
 
 			//while(1){
@@ -108,38 +136,44 @@ int main(int argc, char const *argv[])
 
 				 encrypt(buffer);
 				 printVec(buffer);
+				 close(fd[0]);
+				 write(fd[1], buffer.data(), buffer.size());
+    			 close(fd[1]);
 
-				 send(newSocket, buffer.data(), buffer.size(), 0);
+				//  struct file_struct deserFile5 =pack109::deserialize_file(buffer);
+				//  hs.insert(deserFile5);
+				 //hs.print();
 
-				//  deserFile =pack109::deserialize_file(buffer);
-				//  printVec(deserFile.bytes);
-				
-				// //at this point, we have a full file struct and create a file from it 
-                // string receieved = "received/"; 
-                // string newFileName = deserFile.name; 
-				// cout<<deserFile.name << "\n";
-                // string fullName = receieved+newFileName; 
-                // std::ofstream fileCreated(fullName); //use this to create / write to a file
-                // string oneByte = ""; 
-                // for(int i=0; i<deserFile.bytes.size(); i++){
-				// 	cout<<deserFile.bytes[i]<<"\n";
-                //   oneByte = deserFile.bytes[i]; //extract one byte 
-                //   fileCreated << oneByte; //write to the file one byte at a time
-                // }
-
-
-
-                //close the file 
-               // fileCreated.close(); 
+				 
 
 
                
 			//}
 		}
+		else{
+			close(fd[1]);
+    		size_t n= read(fd[0], readBuffer.data(), readBuffer.size());
+			if (n != -1) {
+   				readBuffer.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
+ 				}
+ 				if ( n < 0 ) printf( "recv failed" );
+    			if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
 
-   // }
 
-    close(newSocket);
+				printf("%s", "IN PARENT PROCESS");
+				printVec(readBuffer);
+				deserFileGlobal =pack109::deserialize_file(readBuffer);
+				hs.insert(deserFileGlobal);
+   
+    			close(fd[0]);
+				close(newSocket);
+		}
+
+	 }
+
+    
+
+	hs.print();
 
 
         
