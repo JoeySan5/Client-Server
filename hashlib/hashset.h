@@ -57,6 +57,8 @@ class HashSet {
     bool insert(string key, vec value);
 };
 
+
+
 template <class T>
 bool HashSet<T>::insert(T item)
 {
@@ -82,12 +84,15 @@ bool HashSet<T>::insert(T item)
   return true;
 }
 
+//inserts the k/v pair into the hash map. Returns true if the key already existed,
+//and replaces the stored value with the supplied value. Returns false if the key did not exist already.
 // template<class T>
 // bool HashSet<T>::insert(string key,vec value){
 //     struct file_struct newFile = {key,value};
 //     if(this-> contains(newFile) == true){
-//       return false;
+//       return true;
 //     }
+
 
 //     unsigned long hashed = hash(key);
 //     this->array[hashed]->insertAtTail(newFile);

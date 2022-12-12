@@ -1,3 +1,5 @@
+#include <iostream>
+
 namespace linkedlist{
 
 
@@ -10,8 +12,12 @@ class Node {
     Node();
     Node(T item);
     ~Node();
+
+    
 };
 
+
+    
     template <class T>
     Node<T>::Node()
     {

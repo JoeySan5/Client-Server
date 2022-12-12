@@ -263,7 +263,7 @@ class LinkedList {
         Node<T>* cP = this->head;
         for (size_t i = 0; i < limit; i++)
         {
-            printf("%d -> ", cP->item);
+            std::cout<<cP->item.print();
             cP = cP->next;
         }
     }

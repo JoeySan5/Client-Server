@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <iostream>
 
 #ifndef PACK109_HPP
 #define PACK109_HPP
@@ -32,7 +33,6 @@ typedef std::string string;
 #define PACK109_A16   0xad
 #define PACK109_M8    0xae
 #define PACK109_M16   0xaf
-
 
 
 struct Person {
@@ -67,6 +67,12 @@ struct file_struct{
     
     return this->name < other.name;
   }
+
+  std::string print()
+    {
+        return  "File name:" + this->name + " " ;
+    }
+
 };
 
 struct Request {

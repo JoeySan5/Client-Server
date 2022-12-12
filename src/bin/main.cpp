@@ -57,9 +57,30 @@ int main(int argc, char const *argv[])
          exit(EXIT_FAILURE);
     }
 
-    HashSet<file_struct> hs; //hashset for files 
+    HashSet<file_struct> hs(10); //hashset for files 
 
-	struct file_struct deserFile;
+	vec newVec;
+	newVec.push_back(4);
+	newVec.push_back(6);
+	vec oldVec;
+		oldVec.push_back(3);
+			newVec.push_back(8);
+
+
+
+	struct file_struct deserFile = {"hello", newVec};
+	struct file_struct deserFile1 = {"hello", newVec};
+	struct file_struct deserFile2 = {"goodbye", oldVec};
+
+
+	hs.insert(deserFile);
+		hs.insert(deserFile1);
+			hs.insert(deserFile2);
+
+
+
+
+	hs.print();
 	
 
 	
