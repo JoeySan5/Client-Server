@@ -85,15 +85,11 @@ int main(int argc, char const *argv[])
 
 
 
-	struct file_struct deserFile = {"hello", newVec};
-	struct file_struct deserFile1 = {"hello", newVec};
-	struct file_struct deserFile2 = {"index.html", oldVec};
+
 	struct file_struct deserFileGlobal;
+	struct req
 
 
-	hs.insert(deserFile.name,deserFile.bytes);
-		hs.insert(deserFile1.name,deserFile1.bytes);
-			hs.insert(deserFile2.name,deserFile2.bytes);
 
 
 
