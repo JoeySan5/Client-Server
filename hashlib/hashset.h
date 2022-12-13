@@ -84,30 +84,48 @@ bool HashSet<T>::insert(T item)
   return true;
 }
 
-//inserts the k/v pair into the hash map. Returns true if the key already existed,
-//and replaces the stored value with the supplied value. Returns false if the key did not exist already.
-// template<class T>
-// bool HashSet<T>::insert(string key,vec value){
-//     struct file_struct newFile = {key,value};
-//     if(this-> contains(newFile) == true){
-//       return true;
-//     }
+// inserts the k/v pair into the hash map. Returns true if the key already existed,
+// and replaces the stored value with the supplied value. Returns false if the key did not exist already.
+template<class T>
+bool HashSet<T>::insert(string key,vec value){
+    struct file_struct newFile = {key,value};
+    if(this-> contains(newFile) == true){
+      std::cout << "contains";
+      this->remove(newFile);
+
+      return true;
+    }
 
 
-//     unsigned long hashed = hash(key);
-//     this->array[hashed]->insertAtTail(newFile);
+    unsigned long hashed = hash(newFile);
+    this->array[hashed]->insertAtTail(newFile);
+    int buckets = 0;
+  for(int i =0;i<this->size;i++)
+  {
+    if(this->array[i]->length>0)
+    {
+      buckets++;
+    }
+  }
+  double loadfactor = (double)(buckets)/(double)(this->size);
+  if(loadfactor>=0.70)
+  {
+    this->resize(this->size*2);
+  }
 
 
-//     return true;
-// }
+    return false;
+}
+
+
 
 template <class T>
 unsigned long HashSet<T>::prehash(T item) 
 {
-    int s = sizeof(item);
+    int s = sizeof(item.name);
     int k = 0;
     unsigned long h = 5381;
-    char* myptr = (char*)&item;
+    char* myptr = (char*)&(item.name);
     while (k<s) 
     {
       char* c = (char*)(myptr+k); 

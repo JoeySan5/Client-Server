@@ -16,9 +16,21 @@
 #include <cstdlib> 
 #include <thread>
 #include <sstream>
+#include <vector>
 
 using namespace pack109;
 using namespace std;
+
+
+template<typename T>
+std::vector<T> slice(std::vector<T> const &v, int m, int n)
+{
+    auto first = v.cbegin() + m;
+    auto last = v.cbegin() + n + 1;
+ 
+    std::vector<T> vec(first, last);
+    return vec;
+}
 
 int main(int argc, char const *argv[])
 {
@@ -75,13 +87,13 @@ int main(int argc, char const *argv[])
 
 	struct file_struct deserFile = {"hello", newVec};
 	struct file_struct deserFile1 = {"hello", newVec};
-	struct file_struct deserFile2 = {"goodbye", oldVec};
+	struct file_struct deserFile2 = {"index.html", oldVec};
 	struct file_struct deserFileGlobal;
 
 
-	hs.insert(deserFile);
-		hs.insert(deserFile1);
-			hs.insert(deserFile2);
+	hs.insert(deserFile.name,deserFile.bytes);
+		hs.insert(deserFile1.name,deserFile1.bytes);
+			hs.insert(deserFile2.name,deserFile2.bytes);
 
 
 
@@ -106,15 +118,18 @@ int main(int argc, char const *argv[])
   if (pipe_result<0)
     printf("error");
 
-	
+	addr_size = sizeof(newAddr);
+
+	//https://stackoverflow.com/questions/16328118/simple-tcp-server-with-multiple-clients-c-unix
 
 	while(1){
 		hs.print();
 		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);//accept connection
 		if(newSocket < 0){
 			printf("%s", "connectino not accpeted ");
-			exit(EXIT_FAILURE);
+			return -1;
 		}
+
 		printf("Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
 		childpid = fork();
 		if(childpid<0) {
@@ -135,7 +150,7 @@ int main(int argc, char const *argv[])
                  if ( n == 0 ) printf("%s", "All good"); /* got end-of-stream */
 
 				 encrypt(buffer);
-				 printVec(buffer);
+				 //printVec(buffer);
 				 close(fd[0]);
 				 write(fd[1], buffer.data(), buffer.size());
     			 close(fd[1]);
@@ -144,6 +159,7 @@ int main(int argc, char const *argv[])
 				//  hs.insert(deserFile5);
 				 //hs.print();
 
+				close(newSocket);
 				 
 
 
@@ -161,9 +177,23 @@ int main(int argc, char const *argv[])
 
 
 				printf("%s", "IN PARENT PROCESS");
-				printVec(readBuffer);
-				deserFileGlobal =pack109::deserialize_file(readBuffer);
-				hs.insert(deserFileGlobal);
+				//printVec(readBuffer);
+				vec checkVec = {174, 1, 170, 7};
+
+				vec sub_vec = slice(readBuffer, 0, 3);
+				printVec(sub_vec);
+
+				if (checkVec != sub_vec){
+					deserFileGlobal =pack109::deserialize_file(readBuffer);
+				hs.insert(deserFileGlobal.name,deserFileGlobal.bytes);
+				}
+				else{
+						
+				}
+
+				
+				
+				
    
     			close(fd[0]);
 				close(newSocket);
@@ -176,21 +206,7 @@ int main(int argc, char const *argv[])
 	hs.print();
 
 
-        
-
-
-		// 		if(strcmp(buffer.data(), ":quit") == 0){//if client sends :quit
-		// 			printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
-		// 			break;
-		// 		}else{
-        //             vec newVec(5000);
-        //             memcpy(newVec.data(), buffer, 4999);
-		// 			encrypt(newVec);
-        //             memcpy(buffer.data(), newVec.data(), 4999);
-        //             printVec(buffer);
-		// 			send(newSocket, buffer.data(), buffer.size(), 0);//send message back to client
-		// 			bzero(buffer.data(), buffer.size());
-		// 		}
+    
     return 0;
 }
 
