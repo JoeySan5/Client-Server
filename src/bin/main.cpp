@@ -21,7 +21,7 @@
 using namespace pack109;
 using namespace std;
 
-
+//[0]
 template<typename T>
 std::vector<T> slice(std::vector<T> const &v, int m, int n)
 {
@@ -76,25 +76,17 @@ int main(int argc, char const *argv[])
 
     HashSet<file_struct> hs(10); //hashset for files 
 
-	vec newVec;
-	newVec.push_back(4);
-	newVec.push_back(6);
-	vec oldVec;
-		oldVec.push_back(3);
-			newVec.push_back(8);
-
 
 
 
 	struct file_struct deserFileGlobal;
-	struct req
+	struct Request deserReqGlobal;
 
 
 
 
 
 
-	hs.print();
 
 		// int pipe(int fds[2]);
 
@@ -104,19 +96,18 @@ int main(int argc, char const *argv[])
 		// fd[1] will be the fd for the write end of pipe.
 		// Returns : 0 on Success.
 		// -1 on error.
-	
-
+		//[1]
   int pipe_result;
   pipe_result =pipe(fd);
-  //https://www.geeksforgeeks.org/c-program-demonstrate-fork-and-pipe/
-  //https://www.geeksforgeeks.org/pipe-system-call/
+
+  //[2]
 
   if (pipe_result<0)
     printf("error");
 
 	addr_size = sizeof(newAddr);
 
-	//https://stackoverflow.com/questions/16328118/simple-tcp-server-with-multiple-clients-c-unix
+	//[3]
 
 	while(1){
 		hs.print();
@@ -163,6 +154,7 @@ int main(int argc, char const *argv[])
 			//}
 		}
 		else{
+			close(sockfd);
 			close(fd[1]);
     		size_t n= read(fd[0], readBuffer.data(), readBuffer.size());
 			if (n != -1) {
@@ -179,18 +171,16 @@ int main(int argc, char const *argv[])
 				vec sub_vec = slice(readBuffer, 0, 3);
 				printVec(sub_vec);
 
+				//[4]
 				if (checkVec != sub_vec){
 					deserFileGlobal =pack109::deserialize_file(readBuffer);
 				hs.insert(deserFileGlobal.name,deserFileGlobal.bytes);
 				}
 				else{
-						
+						deserReqGlobal = pack109::deserialize_request(readBuffer);
 				}
 
 				
-				
-				
-   
     			close(fd[0]);
 				close(newSocket);
 		}

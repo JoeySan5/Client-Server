@@ -55,6 +55,8 @@ class HashSet {
     //inserts the k/v pair into the hash map. Returns true if the key already existed,
     //and replaces the stored value with the supplied value. Returns false if the key did not exist already.
     bool insert(string key, vec value);
+
+   // struct_file get(string key);
 };
 
 
@@ -116,6 +118,24 @@ bool HashSet<T>::insert(string key,vec value){
 
     return false;
 }
+
+// template<class T>
+// struct_file HashSet<T>::get(string key){
+//     unsigned long hashed = hash(key);
+
+//     if (contains(name)) {
+//         struct File find;
+//         for (int i = 0; i < size; i++) {
+//             find = this->array[i]->getFileFromName(name);
+//             if (find.name == name) {
+//                 vec bytes = pack109::serialize((struct File) find);
+//                 return bytes;
+//             }
+//         }
+
+//     }
+
+// }
 
 
 

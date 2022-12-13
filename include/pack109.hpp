@@ -186,11 +186,14 @@ namespace pack109 {
   vec serialize(struct Person item);
   struct Person deserialize_person(vec bytes);
 
-  vec serialize (struct Request &reqFile);
+  vec serialize(struct Request &reqFile);
 
   vec serialize(struct file_struct &file);
 
+
   struct file_struct deserialize_file(vec bytes);
+
+  struct Request deserialize_request(vec bytes);
 
 }
 

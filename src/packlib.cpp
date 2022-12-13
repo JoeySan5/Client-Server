@@ -1000,6 +1000,20 @@ struct file_struct pack109::deserialize_file(vec bytes){
 
 
 
+struct Request pack109::deserialize_request(vec bytes) {
+    struct Request result;
+    unsigned int i = 2;
+    string pair_1_key_1 = pack109::deserialize_string(vec(bytes.begin() + i, bytes.end()));
+    i += (2 + pair_1_key_1.size() + 2);
+    string pair_2_key_1 = pack109::deserialize_string(vec(bytes.begin() + i, bytes.end()));
+    i += (pair_2_key_1.size() + 2);
+    string filename = pack109::deserialize_string(vec(bytes.begin() + i, bytes.end()));
+    result.name = filename;
+    return result;
+}
+
+
+
 //deserialize Person Struct
 struct Person pack109::deserialize_person(vec bytes) {
   struct Person person;
