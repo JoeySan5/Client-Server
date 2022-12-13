@@ -235,7 +235,8 @@ Recording Link(s):
 
 Include a list of websites and resources you used to complete this exam. Make a numbered list, and at the place where you used this resource cite it using [reference style links in Markdown][1] (See this Readme's source for an example. It's invisible in the rendered document, but there are a number of links below this paragraph).
 
-[0]: https://studentaffairs.lehigh.edu/content/code-conduct
-[1]: https://www.markdownguide.org/basic-syntax#reference-style-links
-[2]: http://crasseux.com/books/ctutorial/Building-a-library.html#Building%20a%20library
-[3]: https://support.zoom.us/hc/en-us/articles/201362473-Local-recording
+[0]: https://www.techiedelight.com/get-slice-sub-vector-from-vector-cpp/
+[1]: https://www.geeksforgeeks.org/c-program-demonstrate-fork-and-pipe/
+[2]: https://www.geeksforgeeks.org/pipe-system-call/
+[3]: https://stackoverflow.com/questions/16328118/simple-tcp-server-with-multiple-clients-c-unix
+[4]: https://www.appsloveworld.com/cplus/100/102/istream-iterator-to-iterate-through-bytes-in-a-binary-file
