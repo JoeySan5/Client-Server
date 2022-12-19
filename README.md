@@ -14,12 +14,12 @@
 - I will not plagiarize someone else's work and turn it in as my own. If I use someone else's work in this exam, I will cite that work. Failure to cite work I used is plagiarism.
 - I understand that acts of academic dishonesty may be penalized to the full extent allowed by the [Lehigh University Code of Conduct][0], including receiving a failing grade for the course. I recognize that I am responsible for understanding the provisions of the Lehigh University Code of Conduct as they relate to this academic exercise.
 
-If you agree with the above, type your full name in the following space along with the date. Your exam **will not be graded** without this assent. When you are done, **make your first commit with the commit message: `I, <your full name here>, agree to the ethics contract`.**
+If you agree with the above, type your full name in the following space along with the date. Your exam **will not be graded** without this assent. When you are done, **make your first commit with the commit message: `I, <Joseph Sanchez>, agree to the ethics contract`.**
 
 Write your name and date between the lines below
 
 ---------------------------------------------
-
+Joseph Sanchez
 ---------------------------------------------
 
 ## Exam Prelude
@@ -231,11 +231,14 @@ You can use Zoom to do this, [here is a link][3] to some instructions. You don't
 
 Recording Link(s):
 
+https://drive.google.com/file/d/1ZS583L_GPJ2Gy64kh8HcWb1IuQpyoo_U/view?usp=share_link 
+
 ## Works Cited
 
 Include a list of websites and resources you used to complete this exam. Make a numbered list, and at the place where you used this resource cite it using [reference style links in Markdown][1] (See this Readme's source for an example. It's invisible in the rendered document, but there are a number of links below this paragraph).
 
-[0]: https://studentaffairs.lehigh.edu/content/code-conduct
-[1]: https://www.markdownguide.org/basic-syntax#reference-style-links
-[2]: http://crasseux.com/books/ctutorial/Building-a-library.html#Building%20a%20library
-[3]: https://support.zoom.us/hc/en-us/articles/201362473-Local-recording
+[0]: https://www.techiedelight.com/get-slice-sub-vector-from-vector-cpp/
+[1]: https://www.geeksforgeeks.org/c-program-demonstrate-fork-and-pipe/
+[2]: https://www.geeksforgeeks.org/pipe-system-call/
+[3]: https://stackoverflow.com/questions/16328118/simple-tcp-server-with-multiple-clients-c-unix
+[4]: https://www.appsloveworld.com/cplus/100/102/istream-iterator-to-iterate-through-bytes-in-a-binary-file
