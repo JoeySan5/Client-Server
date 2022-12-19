@@ -45,6 +45,7 @@ int main(int argc, char const *argv[])
 	pid_t childpid;// child process id
 
 	int fd[2];
+	
 
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);//create adult socket
@@ -124,7 +125,9 @@ int main(int argc, char const *argv[])
     		return -1;
   		}		
         else if(childpid == 0){
+
 			close(sockfd);
+			
 
 			//while(1){
 
@@ -154,7 +157,7 @@ int main(int argc, char const *argv[])
 			//}
 		}
 		else{
-			close(sockfd);
+			//close(sockfd);
 			close(fd[1]);
     		size_t n= read(fd[0], readBuffer.data(), readBuffer.size());
 			if (n != -1) {
@@ -164,12 +167,12 @@ int main(int argc, char const *argv[])
     			if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
 
 
-				printf("%s", "IN PARENT PROCESS");
+				//printf("%s", "IN PARENT PROCESS");
 				//printVec(readBuffer);
 				vec checkVec = {174, 1, 170, 7};
 
 				vec sub_vec = slice(readBuffer, 0, 3);
-				printVec(sub_vec);
+				//printVec(sub_vec);
 
 				//[4]
 				if (checkVec != sub_vec){
