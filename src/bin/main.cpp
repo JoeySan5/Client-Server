@@ -17,6 +17,7 @@
 #include <thread>
 #include <sstream>
 #include <vector>
+#include <sys/wait.h>
 
 using namespace pack109;
 using namespace std;
@@ -49,6 +50,7 @@ int main(int argc, char const *argv[])
 
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);//create adult socket
+	printf("%d",sockfd);
 	if(sockfd < 0){
     printf("Error creating socket");
     exit(EXIT_FAILURE);
@@ -57,7 +59,7 @@ int main(int argc, char const *argv[])
     bzero((char*)&serverAddr,  sizeof(serverAddr));
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(8081);
-	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	serverAddr.sin_addr.s_addr = INADDR_ANY;
         
     ret = bind(sockfd, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
 	if(ret < 0){//bind socket to address
@@ -113,23 +115,25 @@ int main(int argc, char const *argv[])
 	while(1){
 		hs.print();
 		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);//accept connection
+		printf("\n%d",newSocket);
 		if(newSocket < 0){
 			printf("%s", "connectino not accpeted ");
-			return -1;
+			exit(EXIT_FAILURE);
 		}
 
 		printf("Connection accepted from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
+		
 		childpid = fork();
+
 		if(childpid<0) {
     		printf("Couldn't create child process");
     		return -1;
   		}		
-        else if(childpid == 0){
+        if(childpid == 0){
 
 			close(sockfd);
-			
+			printf("child process");
 
-			//while(1){
 
 				int n;
 		 		n = recv(newSocket, buffer.data(), 4999, 0);//receive message from client
@@ -139,59 +143,76 @@ int main(int argc, char const *argv[])
                  if ( n < 0 ) printf( "recv failed" );
                  if ( n == 0 ) printf("%s", "All good"); /* got end-of-stream */
 
-				 encrypt(buffer);
-				 //printVec(buffer);
-				 close(fd[0]);
-				 write(fd[1], buffer.data(), buffer.size());
-    			 close(fd[1]);
+				//  encrypt(buffer);
+				//  //printVec(buffer);
+				//  close(fd[0]);
+				//  write(fd[1], buffer.data(), buffer.size());
+    			//  close(fd[1]);
 
 				//  struct file_struct deserFile5 =pack109::deserialize_file(buffer);
 				//  hs.insert(deserFile5);
 				 //hs.print();
 
-				close(newSocket);
 				 
 
+			exit(0);
 
                
-			//}
 		}
 		else{
-			//close(sockfd);
-			close(fd[1]);
-    		size_t n= read(fd[0], readBuffer.data(), readBuffer.size());
-			if (n != -1) {
-   				readBuffer.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
- 				}
- 				if ( n < 0 ) printf( "recv failed" );
-    			if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
+			int status;
+			wait(&status);
+			//The wait system-call puts the process to sleep and waits for a child-process to end. 
+			//It then fills in the argument with the exit code of the child-process (if the argument is not NULL).
+			
+			// close(fd[1]);
+    		// size_t n= read(fd[0], readBuffer.data(), readBuffer.size());
+			// if (n != -1) {
+   			// 	readBuffer.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
+ 			// 	}
+ 			// 	if ( n < 0 ) printf( "recv failed" );
+    		// 	if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
 
 
-				//printf("%s", "IN PARENT PROCESS");
-				//printVec(readBuffer);
-				vec checkVec = {174, 1, 170, 7};
+			// 	//printf("%s", "IN PARENT PROCESS");
+			// 	//printVec(readBuffer);
+			// 	vec checkVec = {174, 1, 170, 7};
 
-				vec sub_vec = slice(readBuffer, 0, 3);
-				//printVec(sub_vec);
+			// 	vec sub_vec = slice(readBuffer, 0, 3);
+			// 	//printVec(sub_vec);
 
-				//[4]
-				if (checkVec != sub_vec){
-					deserFileGlobal =pack109::deserialize_file(readBuffer);
-				hs.insert(deserFileGlobal.name,deserFileGlobal.bytes);
-				}
-				else{
-						deserReqGlobal = pack109::deserialize_request(readBuffer);
-				}
+			// 	//[4]
+			// 	if (checkVec != sub_vec){
+			// 		deserFileGlobal =pack109::deserialize_file(readBuffer);
+			// 	hs.insert(deserFileGlobal.name,deserFileGlobal.bytes);
+			// 	}
+			// 	else{
+			// 			deserReqGlobal = pack109::deserialize_request(readBuffer);
+			// 	}
 
 				
-    			close(fd[0]);
+    		// 	close(fd[0]);
+		
+			printf("parent process");
 				close(newSocket);
 		}
+		close(newSocket);
+
+
+		if(argv[1] == "quit"){
+			close(sockfd);
+			close(newSocket);
+			break;
+		}
+		
 
 	 }
 
-    
 
+
+
+    
+	printf("%s", "Outside of loop... Final hashset:");
 	hs.print();
 
 
