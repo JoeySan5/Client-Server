@@ -131,8 +131,9 @@ int main(int argc, char const *argv[])
   		}		
         if(childpid == 0){
 
-			close(sockfd);
 			printf("child process");
+			close(sockfd);
+			
 
 
 				int n;
@@ -143,15 +144,15 @@ int main(int argc, char const *argv[])
                  if ( n < 0 ) printf( "recv failed" );
                  if ( n == 0 ) printf("%s", "All good"); /* got end-of-stream */
 
-				//  encrypt(buffer);
-				//  //printVec(buffer);
-				//  close(fd[0]);
-				//  write(fd[1], buffer.data(), buffer.size());
-    			//  close(fd[1]);
+				 encrypt(buffer);
+				// printVec(buffer);
+				 close(fd[0]);
+				 write(fd[1], buffer.data(), buffer.size());
+    			 close(fd[1]);
+				 printf("child process2");
 
-				//  struct file_struct deserFile5 =pack109::deserialize_file(buffer);
-				//  hs.insert(deserFile5);
-				 //hs.print();
+				 
+				hs.print();
 
 				 
 
@@ -160,43 +161,49 @@ int main(int argc, char const *argv[])
                
 		}
 		else{
+			printf("parent process");
 			int status;
 			wait(&status);
-			//The wait system-call puts the process to sleep and waits for a child-process to end. 
-			//It then fills in the argument with the exit code of the child-process (if the argument is not NULL).
+			// The wait system-call puts the process to sleep and waits for a child-process to end. 
+			// It then fills in the argument with the exit code of the child-process (if the argument is not NULL).
 			
-			// close(fd[1]);
-    		// size_t n= read(fd[0], readBuffer.data(), readBuffer.size());
-			// if (n != -1) {
-   			// 	readBuffer.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
- 			// 	}
- 			// 	if ( n < 0 ) printf( "recv failed" );
-    		// 	if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
+			close(fd[1]);
+    		size_t n= read(fd[0], readBuffer.data(), readBuffer.size());
+			if (n != -1) {
+   				readBuffer.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
+ 				}
+ 				if ( n < 0 ) printf( "recv failed" );
+    			if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
+
+				printf("parent process1");
 
 
-			// 	//printf("%s", "IN PARENT PROCESS");
-			// 	//printVec(readBuffer);
-			// 	vec checkVec = {174, 1, 170, 7};
+				//printf("%s", "IN PARENT PROCESS");
+				//printVec(readBuffer);
+				vec checkVec = {174, 1, 170, 7};
 
-			// 	vec sub_vec = slice(readBuffer, 0, 3);
-			// 	//printVec(sub_vec);
+				vec sub_vec = slice(readBuffer, 0, 3);
+				//printVec(sub_vec);
 
-			// 	//[4]
-			// 	if (checkVec != sub_vec){
-			// 		deserFileGlobal =pack109::deserialize_file(readBuffer);
-			// 	hs.insert(deserFileGlobal.name,deserFileGlobal.bytes);
-			// 	}
-			// 	else{
-			// 			deserReqGlobal = pack109::deserialize_request(readBuffer);
-			// 	}
+				// [4]
+				// if (checkVec != sub_vec){
+				// 	deserFileGlobal =pack109::deserialize_file(readBuffer);
+				// hs.insert(deserFileGlobal.name,deserFileGlobal.bytes);
+				// }
+				// else{
+				// 		deserReqGlobal = pack109::deserialize_request(readBuffer);
+				// }
+
+				printf("parent process2");
 
 				
-    		// 	close(fd[0]);
+    		 	close(fd[0]);
 		
-			printf("parent process");
+			
 				close(newSocket);
+				printf("parent process3");
 		}
-		close(newSocket);
+		
 
 
 		if(argv[1] == "quit"){
