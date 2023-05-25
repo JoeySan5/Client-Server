@@ -19,6 +19,4 @@ main.o:
 clean:
 	rm -f *.a
 	rm -f *.o
-	rm -rf build/lib
-	rm -rf build/objects
-	rm -rf build/out
+	rm -rf build
