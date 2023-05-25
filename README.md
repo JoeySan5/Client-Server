@@ -1,58 +1,7 @@
-# CSE109 - Systems Software - Fall 2022
 
-# Final Exam
-
-**Due Date: 12/12/2022 EOD**
-
-## Ethics Contract
-
-**FIRST**: Please read the following carefully:
-
-- I have not received, I have not given, nor will I give or receive, any assistance to another student taking this exam, including discussing the exam with students in another section of the course. Do not discuss the exam after you are finished until final grades are submitted.
-- If I use any resources (including text books and online references and websites), I will cite them in my assignment.
-- I will not ask question about how to debug my exam code on Piazza or any other platform.
-- I will not plagiarize someone else's work and turn it in as my own. If I use someone else's work in this exam, I will cite that work. Failure to cite work I used is plagiarism.
-- I understand that acts of academic dishonesty may be penalized to the full extent allowed by the [Lehigh University Code of Conduct][0], including receiving a failing grade for the course. I recognize that I am responsible for understanding the provisions of the Lehigh University Code of Conduct as they relate to this academic exercise.
-
-If you agree with the above, type your full name in the following space along with the date. Your exam **will not be graded** without this assent. When you are done, **make your first commit with the commit message: `I, <Joseph Sanchez>, agree to the ethics contract`.**
-
-Write your name and date between the lines below
-
----------------------------------------------
-Joseph Sanchez
----------------------------------------------
-
-## Exam Prelude
-
-**Read thoroughly before starting your exam:**
-
-### Instructions 
-
-1. Fork this repository into your CSE109 project namespace. [Instructions](https://docs.gitlab.com/ee/workflow/forking_workflow.html#creating-a-fork)
-2. Clone your newly forked repository onto your development machine. [Instructions](https://docs.gitlab.com/ee/gitlab-basics/start-using-git.html#clone-a-repository) 
-3. As you are writing code you should commit patches along the way. *i.e.* don't just submit all your code in one big commit when you're all done. Commit your progress as you work. **You should make at least one commit per question.**
-4. When you've committed all of your work, there's nothing left to do to submit the assignment.
-
-### Commit Policy
-
-This exam is divided into discrete "questions", and you must make at least one commit per question. This is how I will know you are not just copying and pasting an entire solution from the internet. I will be able to see how much time you spend on each question based on your commit times. Red flags are raised when certain patterns of behavior indicating cheating are exhibited by your commit activity. 
-
-You can do the questions in any order, and you can go back to questions for which you have already made a commit, but I want you to have at least one commit per question. The commit message for each question should be "QUESTION N" where N is the number of the question.
-
-### Resource Usage Policy
-
-You are free to use any resource for this exam. This includes books, notes, lecture videos, documentation, the internet, Stack Overflow, etc. The only course resources off limits are me and your TAs. I am free to answer clarifying questions, but that's it. I can't help you debug or provide any technical support (this includes support with git. Knowing how to use git is part of this exam.)
-
-If you use any resources from the internet or anywhere else, **YOU HAVE TO CITE THEM** in your exam. Failure to cite resources you used may lead to failure of the exam. This includes the wiki article and videos I posted above. If you use them, cite them every time you use them. See the Works Cited section at the bottom for more details on how to cite your work in this document using Markdown.
-
-## Assignment
-
-As this is your final exam, I expect that you have acquired the necessary skills to complete it. Therefore, I will not tell you what to do step-by-step. You have a lot of latitude to complete this project as you see fit. This means you can use whichever language you want (either C or C++), you can lay out your project directory however you want, and you can use whatever tools you want (gcc, g++, clang, Make, etc.). Do whatever works for you in order to achieve the intended result.
-
-For this exam, you will be writing the second half of a client/server pair that will communicate over Unix sockets. The pair is:
-
-1. File Server - A file server is a program that hosts files for clients. It receives files that clients want to store, and sends them back to the client (or other clients) when they are requested. This is what you will be writing for this assignment. An example file server has been provided for you in the Homework 8 repository. You can use it as a reference for this exam.
-2. Client - This program connects to the server and can send files to it, which will be stored on the file server. The client can also request files from the file server. An example client implementation has already been provided for you in Homework 8. You may use any of your work from Homework 8 for this exam, but if you do so, cite it.
+Project contains two main parts: 
+1. File Server - A file server is a program that hosts files for clients. It receives files that clients want to store, and sends them back to the client (or other clients) when they are requested. 
+2. Client - This program connects to the server and can send files to it, which will be stored on the file server. The client can also request files from the file server. 
 
 ## Part 2 - File Server
 
@@ -217,25 +166,10 @@ In decimal:
 [174, 1, 170, 7, 82, 101, 113, 117, 101, 115, 116, 174, 1, 170, 4, 110, 97, 109, 101, 170, 8, 102, 105, 108, 101, 46, 116, 120, 116]
 ```
 
-## Video Explanation
-
-This is the oral portion of the exam. You will record an explanation for your file server, and demonstrate that it works with the client that you wrote. 
-
-**Important The first thing you say in your exam should be which cut you attempted.**
-
-To demonstrate your file server working, it's sufficient to show the client sending a file (any file) to the server, the server acknowledging its receipt, and then to show the client requesting it again and saving it to disk. If you did not successfully write the client, you may demonstrate your file server working with the example client binary.
-
-If you didn't get either the file server or client working, explain how you attempted to solve this exam and where you got stuck. Show off any code you did write. This will get you full credit for this portion.
-
-You can use Zoom to do this, [here is a link][3] to some instructions. You don't have to record your face, only your voice and the screen. Go through your code and explain how you the important parts (important is subjective here. Usually the important bits are the ones you spent the most time on or had the most difficulty with). Your goal with this section is to convince me you know what you are talking about, so I want you to do this without reading a script or written answer. When you are done, upload your recording to your final exam repository.
-
-Recording Link(s):
 
 https://drive.google.com/file/d/1ZS583L_GPJ2Gy64kh8HcWb1IuQpyoo_U/view?usp=share_link 
 
 ## Works Cited
-
-Include a list of websites and resources you used to complete this exam. Make a numbered list, and at the place where you used this resource cite it using [reference style links in Markdown][1] (See this Readme's source for an example. It's invisible in the rendered document, but there are a number of links below this paragraph).
 
 [0]: https://www.techiedelight.com/get-slice-sub-vector-from-vector-cpp/
 [1]: https://www.geeksforgeeks.org/c-program-demonstrate-fork-and-pipe/
