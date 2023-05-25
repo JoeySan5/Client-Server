@@ -206,3 +206,7 @@ In a file called WRITEUP.md, provide a detailed account of how your client was c
 Note any sources that you used and make sure to include a works cited.
 
 Note: If you would rather record a video walkthrough of your code, you can do this as well. Upload the video to your repository or google drive and add a link here. Make sure to grant viewing permissions to **anyone with the link** (!!!not just Prof. Montella!!!).
+
+//https://www.appsloveworld.com/cplus/100/102/istream-iterator-to-iterate-through-bytes-in-a-binary-file
+
+https://drive.google.com/drive/folders/1F_d_Nc9lEk20WIuaFOCrrjJS95DUidbX?usp=share_link 
