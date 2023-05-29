@@ -1,69 +1,11 @@
 
-Project contains two main parts: 
+### Project contains two main parts: 
+
 1. File Server - A file server is a program that hosts files for clients. It receives files that clients want to store, and sends them back to the client (or other clients) when they are requested. 
 2. Client - This program connects to the server and can send files to it, which will be stored on the file server. The client can also request files from the file server. 
 
-## Part 2 - File Server
 
-There are three cuts to this exam. You can choose the one you wish to complete based on how ambitious you are. The harder the cut, the higher the maximum grade you can earn. You should specify in the cut you chose at the beginning of your oral explanation.
-
-No matter which version you choose, the file server program should accept the following flag:
-
-1. `--hostname address:port` - Where `address` is a 32 bit IP address, and `port` is the desired port of the file server.
-
-If you call the program without a `--hostname`, it should use the default of `localhost:8081`.
-
-
----
-
-### Cut 1 - Single Serve
-
-The maximum grade for this cut is a **`B (85%)`**.
-
-- Q1-1. The server will start, bind a socket to a port, and listen for a connection.
-- When an connection is established, it will attempt to read a message from the client. The message will either be a `File` message or a `Request` message.
-- The server will service the message in the following steps:
-  - Q1-2. Read the message to a buffer
-  - Q1-3. Decrypt the message
-  - Q1-4 Deserialize the message to the appropriate struct, either a `File` or `Request`.
-    - Q1-5. If the message is a `File`, then the server will save the file to disk in a folder called `received`.
-    - Q1-6. If the message is a `Request`, then the server will look for the requested file in the `received` folder. 
-      - If the requested file does not exist, nothing will be sent back to the client.
-      - Q1-7. If the file does exist it will be read into memory, serialized into a `File` message, encrypted, and sent to the client.
-    - After servicing this one message, the file server will exit.
-    - If you want to send or request another file from the file server, you must restart the file server so it can service another request.
-
----
-
-### Cut 2 - Sustained Connection
-
-The maximum grade for this cut is an **`A (93%)`**.
-
-- Q2-1. The server will start, bind a socket to a port, and listen for a connection.
-- Q2-2. The server will create an empty hash map to store received files in memory.
-  - You have to write the hash map yourself. You can't use a library that you did not write. You can use your Homework 6 code or the posted solution as a starting point. Remember to cite this code if you use it. If you look at any source for help, be sure to cite it.
-  - The hash map will use the filename string as a key, and the file as a value (this can be either the received `File`, or the file data `vector<u8>`).
-  - The hashmap will act much like the hash set, except it will have two additional methods:
-    - Q2-3. `bool insert(String key, File value);` - inserts the k/v pair into the hash map. Returns true if the key already existed, and replaces the stored value with the supplied value. Returns false if the key did not exist already.
-    - Q2-4. `File get(String key);` - Returns the file associated with the supplied key. If the key doesn't exist, this function throws an exception.
-- When the server receives a connection, it will enter an infinite loop.
-  - This loop will attempt to receive data from the client. When it receives a message, it will follow the following steps:
-    - Q2-5. Read the message to a buffer
-    - Q2-6. Decrypt the message
-    - Q2-7. Deserialize the message to the appropriate struct, either a `File` or `Request`.
-      - Q2-8. If the message is a `File`, then the server will insert the filename and file into the hash map.
-      - Q2-9.If the message is a `Request`, then the server will look for the requested file in hash map. 
-        - If the requested file does not exist, nothing will be sent back to the client.
-        - Q2-10. If the file does exist it will be serialized into a `File` message, encrypted, and sent to the client.
-  - After servicing this message, the file server will loop and wait for a new message from the client.
-  - The file server will not terminate until the user terminates the program or the client terminates the connection.
-  - To properly test this cut of the file server, you will have to modify your client to be able to send multiple messages without terminating the connection.
-
----
-
-### Cut 3 - Multiple Connections
-
-The maximum grade for this cut is an **`A+ (100%)`**.
+### Program Features: Multiple Connections
 
 - Q3-1. The server will start, bind a socket to a port, and listen for a connection.
 - Q3-2. The server will create an empty hash map to store received files in memory. See the previous section for instructions on how to do that.
@@ -166,8 +108,6 @@ In decimal:
 [174, 1, 170, 7, 82, 101, 113, 117, 101, 115, 116, 174, 1, 170, 4, 110, 97, 109, 101, 170, 8, 102, 105, 108, 101, 46, 116, 120, 116]
 ```
 
-
-https://drive.google.com/file/d/1ZS583L_GPJ2Gy64kh8HcWb1IuQpyoo_U/view?usp=share_link 
 
 ## Works Cited
 
