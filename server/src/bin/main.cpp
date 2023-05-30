@@ -44,6 +44,8 @@ int main(int argc, char const *argv[])
 	vec buffer(5000);//buffer to hold btyes of messages
 	vec readBuffer(5000);//buffer to 
 	pid_t childpid;// child process id
+	vec exit_vec = {174, 1, 170, 4, 70, 105, 108, 101, 174, 2, 170, 4, 110, 97, 109, 101, 170, 4, 101, 
+	120, 105, 116, 170, 5, 98, 121, 116, 101, 115, 172, 4, 162, 101, 162, 120, 162, 105, 162, 116 };
 
 	int fd[2];
 	
@@ -91,33 +93,35 @@ int main(int argc, char const *argv[])
 
 
 
-		// int pipe(int fds[2]);
+	// int pipe(int fds[2]);
 
-		// Parameters :
-		// fd[0] will be the fd(file descriptor) for the 
-		// read end of pipe.
-		// fd[1] will be the fd for the write end of pipe.
-		// Returns : 0 on Success.
-		// -1 on error.
-		//[1]
-  int pipe_result;
-  pipe_result =pipe(fd);
+	// Parameters :
+	// fd[0] will be the fd(file descriptor) for the 
+	// read end of pipe.
+	// fd[1] will be the fd for the write end of pipe.
+	// Returns : 0 on Success.
+	// -1 on error.
+	//[1]
 
-  //[2]
+	int pipe_result;
+	pipe_result =pipe(fd);
 
-  if (pipe_result<0)
-    printf("error");
+	//[2]
+
+	if (pipe_result<0)
+	printf("error");
 
 	addr_size = sizeof(newAddr);
 
 	//[3]
 
+	//Entering loop
 	while(1){
 		hs.print();
 		newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);//accept connection
 		printf("\n%d",newSocket);
 		if(newSocket < 0){
-			printf("%s", "connectino not accpeted ");
+			printf("%s", "connection not accepted ");
 			exit(EXIT_FAILURE);
 		}
 
@@ -141,11 +145,17 @@ int main(int argc, char const *argv[])
                   if (n != -1) {
                      buffer.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
                      }
-                 if ( n < 0 ) printf( "recv failed" );
-                 if ( n == 0 ) printf("%s", "All good"); /* got end-of-stream */
+                 if ( n < 0 ) {
+					printf( "recv failed" );
+					close(sockfd);
+					close(newSocket);
+					exit(EXIT_FAILURE);
+				 };
+                 if ( n == 0 ) printf("%s", "All good for recv"); /* got end-of-stream */
 
 				 encrypt(buffer);
-				// printVec(buffer);
+
+				
 				 close(fd[0]);
 				 write(fd[1], buffer.data(), buffer.size());
     			 close(fd[1]);
@@ -177,6 +187,18 @@ int main(int argc, char const *argv[])
 
 				printf("parent process1");
 
+				//checks if client is exiting program, which will therefore close the server
+				//in parent process so it exits program completely
+				 if (readBuffer == exit_vec){
+					close(sockfd);
+					close(newSocket);
+					printf("in exit");
+					exit(EXIT_FAILURE);
+				}
+				else{
+					printf("not exit");
+				}
+
 
 				//printf("%s", "IN PARENT PROCESS");
 				//printVec(readBuffer);
@@ -206,14 +228,10 @@ int main(int argc, char const *argv[])
 		
 
 
-		if(argv[1] == "quit"){
-			close(sockfd);
-			close(newSocket);
-			break;
-		}
+		
 		
 
-	 }
+	}
 
 
 

@@ -913,7 +913,7 @@ vec pack109::serialize(struct file_struct &file) {
 
     }
 
-//function for pasing by reference
+//function to encode and decode messages sent over buffer
     void pack109::encrypt(vec &bytes){
       u8 key = 0x2a;
       for(int i = 0; i < bytes.size(); i++){

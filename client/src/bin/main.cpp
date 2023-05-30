@@ -36,6 +36,7 @@ int main(int argc, char const *argv[])
     
 
 
+    //This for loop retrieves the required arguments
     for (int i = 1; i < argc; i++) {
  
         if (strcmp(argv[i], "--hostname") == 0) {
@@ -57,7 +58,7 @@ int main(int argc, char const *argv[])
     }
 
     if( ((request_flag == true) && (send_flag == true)) || ((request_flag == false) && (send_flag == false)) ){
-            printf("ENDING PROGRAM");
+            printf("ENDING PROGRAM incorrect args given");
             return 2;
         }
 
@@ -88,46 +89,51 @@ int main(int argc, char const *argv[])
     }
     else if (send_flag == true){
 
-     //to get name of file (w/ out path)
-	 std::vector<std::string> v = pack109::split(file_path, '/');
-	 file_name = v[v.size() -1];
-     //std::cout << file_name;
+        //to get name of file (w/ out path)
+        std::vector<std::string> v = pack109::split(file_path, '/');
+        file_name = v[v.size() -1];
+        //std::cout << file_name;
 
 
-    streampos size; //this type is used for buffer and file positioning, can be converted to int to show size of a file
-    vec bytes;
+        streampos size; //this type is used for buffer and file positioning, can be converted to int to show size of a file
+        vec bytes;
 
-	//ifstream to read in a file
-	ifstream my_file(file_path, ios::in|ios::binary);//this line allows for .open() to be called as well//ios::in allows for input operations & ios::binary allows to open in binary mode ios::ate sets pos to the end of the file
-	if (my_file.is_open()){
-        //https://www.appsloveworld.com/cplus/100/102/istream-iterator-to-iterate-through-bytes-in-a-binary-file
-  bytes.insert(bytes.end(),std::istreambuf_iterator<char>(my_file),std::istreambuf_iterator<char>()); //concats to the end of bytes, from beg of my_file to the end 
-  //must use istreambuf_iterator when working with binary
+        //ifstream to read in a file
+        ifstream my_file(file_path, ios::in|ios::binary);//this line allows for .open() to be called as well//ios::in allows for input operations & ios::binary allows to open in binary mode ios::ate sets pos to the end of the file
+        if (my_file.is_open()){
+            //https://www.appsloveworld.com/cplus/100/102/istream-iterator-to-iterate-through-bytes-in-a-binary-file
+            bytes.insert(bytes.end(),std::istreambuf_iterator<char>(my_file),std::istreambuf_iterator<char>()); 
+            //concats to the end of bytes, from beg of my_file to the end 
+            //must use istreambuf_iterator when working with binary
+                    
+            cout << "the entire file content is in memory\n";
+            for (int i = 0; i < bytes.size(); i++) {
+            printf("%x ", bytes[i]);
+            }
+
+        }
+        else {
+            cout << "Unable to open file";
+            return 2;
+        }
+
+        my_file.close();
+
+        struct file_struct file = {file_name, bytes};
         
-    cout << "the entire file content is in memory\n";
-    for (int i = 0; i < bytes.size(); i++) {
-    printf("%x ", bytes[i]);
-  }
+        //storing file struct as a serialized vec of bytes in "serialized"
+        serialized = pack109::serialize(file);
 
-  }
-  else {
-    cout << "Unable to open file";
-    return 2;
-}
-
-my_file.close();
-
-    struct file_struct file = {file_name, bytes};
-    
-    //storing file struct as a serialized vec of bytes in "serialized"
-     serialized = pack109::serialize(file);
-
-       // pack109::printVec(serialized);
+         pack109::printVec(serialized);
 
 
-    pack109::encrypt(serialized);
+        pack109::encrypt(serialized);
+                 pack109::printVec(serialized);
 
-}
+
+    }
+
+
     //BEGINNING OF SOCKET INITIALIZATION
 
     int sockfd, portno, n; //sockfd is a socket descriptor that points to the file table that contains info on what action will take place (read,write etc)
@@ -146,22 +152,22 @@ my_file.close();
     
 
     if (sockfd < 0) {
-      perror("ERROR opening socket");
-      exit(1);
-   }
+        perror("ERROR opening socket");
+        exit(1);
+    }
 
     char* caddress = &*address.begin(); //this returns a pointer to the beginning of the (reference) array of (string) address
     server = gethostbyname(caddress); //returns a pointer to a struct hostent containing all info of the passed in server address
 
-   if ( server == nullptr){
+    if ( server == nullptr){
         perror("errorhostname");
         exit(EXIT_FAILURE);
-   } // this reutns a struct of hostent, which contains info of the host, *h_addr contains the IP address
-   //for future , use get addrinfo for better efficiency
+    } // this reutns a struct of hostent, which contains info of the host, *h_addr contains the IP address
+    //for future , use get addrinfo for better efficiency
 
-        printf("%s ", (char*)server->h_addr);
+    printf("%s ", (char*)server->h_addr);
 
-   //a buffer is a region of memory temporarily holding data while it(the data) is being moved to another place
+    //a buffer is a region of memory temporarily holding data while it(the data) is being moved to another place
     bzero((char *) &serv_addr, sizeof(serv_addr)); //bzero causes for all serv_addr members to be zeros
     serv_addr.sin_family = AF_INET; //declares that the address family is internet based
     bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length); //bcopy(char*src,char*dest,int length) copies length bytes from src to dest. they may overlap
@@ -169,51 +175,50 @@ my_file.close();
 
     
     //Connecting to Server
-
-     if (connect(sockfd,(struct sockaddr*)&serv_addr,sizeof(serv_addr)) < 0){ //connect() takes in file descriptor, address ofhost toconnect to(including port #), and size of address, returns 0 on success, -1 on fail
-
-       perror("ERROR connecting");
-       exit(1);
-   }
-
+    if (connect(sockfd,(struct sockaddr*)&serv_addr,sizeof(serv_addr)) < 0){
+        //connect() takes in file descriptor, address ofhost toconnect to(including port #), and size of address, returns 0 on success, -1 on fail
+        perror("ERROR connecting");
+        exit(1);
+    }
 
 
 
-//printf("%s", serializedString);
- n = send(sockfd, serialized.data(), serialized.size(),0 );
- if ( n < 0 ) printf( "recv failed" );
+
+    //printf("%s", serializedString);
+    n = send(sockfd, serialized.data(), serialized.size(),0 );
+    if ( n < 0 ) printf( "recv failed" );
 
 
-if (request_flag == true){
-vec recievedFile(5000);
- n = recv(sockfd,recievedFile.data(),4999,0);
- if (n != -1) {
-   recievedFile.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
- }
- if ( n < 0 ) printf( "recv failed" );
-    if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
+    if (request_flag == true){
+        vec recievedFile(5000);
+        n = recv(sockfd,recievedFile.data(),4999,0);
+        if (n != -1) {
+        recievedFile.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
+        }
+        if ( n < 0 ) printf( "recv failed" );
+        if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
 
-    pack109::encrypt(recievedFile);
-    pack109::printVec(recievedFile);
-    
-   // struct file_struct reqFile;
-    deserFile =pack109::deserialize_file(recievedFile);
-	
+        pack109::encrypt(recievedFile);
+        pack109::printVec(recievedFile);
+            
+        // struct file_struct reqFile;
+        deserFile =pack109::deserialize_file(recievedFile);
+            
 
-//at this point, we have a full file struct and create a file from it 
-                string receieved = "received/"; 
-                string newFileName = deserFile.name; 
-                string fullName = receieved+newFileName; 
-                std::ofstream fileCreated(fullName); //use this to create / write to a file
-                string oneByte = ""; 
-                for(int i=0; i<deserFile.bytes.size(); i++){
-                  oneByte = deserFile.bytes[i]; //extract one byte 
-                  fileCreated << oneByte; //write to the file one byte at a time
-                }
+        //at this point, we have a full file struct and create a file from it 
+        string receieved = "received/"; 
+        string newFileName = deserFile.name; 
+        string fullName = receieved+newFileName; 
+        std::ofstream fileCreated(fullName); //use this to create / write to a file
+        string oneByte = ""; 
+        for(int i=0; i<deserFile.bytes.size(); i++){
+        oneByte = deserFile.bytes[i]; //extract one byte 
+        fileCreated << oneByte; //write to the file one byte at a time
+        }
 
-                //close the file 
-                fileCreated.close(); 
-}
+        //close the file 
+        fileCreated.close(); 
+    }
     
 
 
