@@ -5,7 +5,34 @@
 2. Client - This program connects to the server and can send files to it, which will be stored on the file server. The client can also request files from the file server. 
 
 
-### Program Features: Multiple Connections
+### File Server Part 1: Client 
+The client program should accept the following flags:
+
+
+--hostname address:port - Where address is a IPv4 hostname, and port is the desired port of the file server. If this flag isn't provided, the default address is taken to be "localhost" and the default port is taken to be "123
+"
+
+
+--send filename
+
+
+Where filename is a path to a file on your local computer.
+
+--request filename
+
+Where filename is the name of a file stored on the file server
+For example, you could call the client like this:
+
+./client --hostname localhost:1234 --send files/document.txt
+
+
+Or like this:
+
+./client --hostname localhost:8081 --request document.txt
+
+### File Server Part 2: Server 
+If you call the program with the --send and --request options at the same time, it should exit with an error.
+
 
 - Q3-1. The server will start, bind a socket to a port, and listen for a connection.
 - Q3-2. The server will create an empty hash map to store received files in memory. See the previous section for instructions on how to do that.
