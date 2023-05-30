@@ -195,20 +195,30 @@ unsigned long HashSet<T>::hash(T item)
 }
 
 
-
+//removes item in hashmap, if it does not exist, returns false
+//else it returns true 
 template <class T>
 bool HashSet<T>::remove(T item)
 {
+  string name = "null";
+  vec temp_vec = {0};
+  struct file_struct null_file = {name ,temp_vec};
   if(this->contains(item)==false)
   {
+    printf("\nret first false in remove hash");
     return false;
   }
   unsigned long hashed = hash(item);
   T s = this->array[hashed]->remove(item);
-  if(s ==0)
+  if(s == null_file)
   {
+        printf("\nret second false in remove hash");
+
     return false;
   }
+
+    printf("\nret third false in remove hash");
+
   return true;
 }
 

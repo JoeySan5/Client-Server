@@ -2,6 +2,10 @@
 #include <stdbool.h>
 #include "llnode.h"
 #include <stdlib.h>
+#include "../include/pack109.hpp"
+
+
+using namespace pack109;
 
 namespace linkedlist{
 
@@ -77,10 +81,13 @@ class LinkedList {
         {
             if(current->item ==item)
             {
+                printf("\nret true in linklist");
                 return true;
             }
             current = current->next;
         }
+                        printf("\nret false in linklist");
+
         return false;
     }
 
@@ -196,6 +203,10 @@ class LinkedList {
                 break;
             }
         }
+        string name = "null";
+        vec temp_vec = {0};
+        struct file_struct tempFile = {name ,temp_vec};
+        temp = tempFile;
         return temp;
     }
 

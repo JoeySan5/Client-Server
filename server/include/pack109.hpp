@@ -48,7 +48,7 @@ struct file_struct{
   bool operator==(const file_struct& other) const {
     return this->name == other.name;
   }
-  //  bool operator==(nullptr_t) const {
+  //  bool operator==(nullptr) const {
   //    return false;
   //  }
 
@@ -62,6 +62,8 @@ struct file_struct{
           return false;
         }
     }
+
+  
 
   bool operator<(const file_struct& other) const {
     
