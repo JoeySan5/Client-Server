@@ -84,8 +84,8 @@ int main(int argc, char const *argv[])
 
 
 
-	struct file_struct deserFileGlobal;
-	struct Request deserReqGlobal;
+	struct file_struct deserFile;
+	struct Request deserReq;
 
 
 
@@ -156,9 +156,9 @@ int main(int argc, char const *argv[])
 				 encrypt(buffer);
 
 				
-				 close(fd[0]);
+				// close(fd[0]);
 				 write(fd[1], buffer.data(), buffer.size());
-    			 close(fd[1]);
+    			// close(fd[1]);
 				 printf("child process2");
 
 				 
@@ -173,17 +173,23 @@ int main(int argc, char const *argv[])
 		else{
 			printf("parent process");
 			int status;
-			wait(&status);
+			int s = wait(&status);
+			if (s == -1){
+				printf("Error returned from child process");
+				close(sockfd);
+				close(newSocket);
+				exit(EXIT_FAILURE);
+			}
 			// The wait system-call puts the process to sleep and waits for a child-process to end. 
 			// It then fills in the argument with the exit code of the child-process (if the argument is not NULL).
 			
-			close(fd[1]);
+			//close(fd[1]);
     		size_t n= read(fd[0], readBuffer.data(), readBuffer.size());
 			if (n != -1) {
    				readBuffer.resize(n); //n will be smaller than the number of elements in the vector, therefore will resize
  				}
  				if ( n < 0 ) printf( "recv failed" );
-    			if ( n == 0 ) printf("%s", "Allg good"); /* got end-of-stream */
+    			if ( n == 0 ) printf("%s", "empty read"); /* got end-of-stream */
 
 				printf("parent process1");
 
@@ -192,34 +198,37 @@ int main(int argc, char const *argv[])
 				 if (readBuffer == exit_vec){
 					close(sockfd);
 					close(newSocket);
-					printf("in exit");
-					exit(EXIT_FAILURE);
+					printf("\nExit command sent from Client... \nExiting Server");
+					exit(EXIT_SUCCESS);
 				}
-				else{
-					printf("not exit");
-				}
+				//close(fd[0]);
+				
 
-
-				//printf("%s", "IN PARENT PROCESS");
+				printf("\nIN PARENT PROCESS");
 				//printVec(readBuffer);
-				vec checkVec = {174, 1, 170, 7};
+				//this is a comparison vec to check for sending files
+				vec check_vec_send = {174, 1, 170, 4};
 
+				//comparison vec to check for requesting files
+				vec check_vec_req = {174, 1, 170, 7};
+
+				//slice of vec recieved from client to check if send/req
 				vec sub_vec = slice(readBuffer, 0, 3);
-				//printVec(sub_vec);
 
-				// [4]
-				// if (checkVec != sub_vec){
-				// 	deserFileGlobal =pack109::deserialize_file(readBuffer);
-				// hs.insert(deserFileGlobal.name,deserFileGlobal.bytes);
-				// }
-				// else{
-				// 		deserReqGlobal = pack109::deserialize_request(readBuffer);
-				// }
+				//[4]
+				//Checks type of serialized file
+				if (sub_vec == check_vec_send){
+					deserFile = pack109::deserialize_file(readBuffer);
+					hs.insert(deserFile.name,deserFile.bytes);
+				}
+				else if (sub_vec == check_vec_req){
+					deserReq = pack109::deserialize_request(readBuffer);
+				}
 
 				printf("parent process2");
 
 				
-    		 	close(fd[0]);
+    		 	
 		
 			
 				close(newSocket);

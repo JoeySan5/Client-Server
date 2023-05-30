@@ -64,7 +64,7 @@ int main(int argc, char const *argv[])
 
     if (host_flag == false){
         address = "localhost";
-        port = "123";
+        port = "8081";
         std::cout <<address<< port;
 
     }
